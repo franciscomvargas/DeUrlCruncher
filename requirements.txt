@@ -1,0 +1,6 @@
+googlesearch-python
+beautifulsoup4
+
+# DeSOTA Packgs
+pyyaml
+requests
