@@ -5,9 +5,6 @@ import os
 import time
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('-hs', '--handshake',
-                    help='Service Status Request',
-                    action='store_true')
 parser.add_argument("-q", "--query", 
                     help='Search query, empty to enter in cli mode',
                     default="deurlcruncher_cli",
@@ -28,22 +25,21 @@ def get_urls(query, numresults=5):
     return list(search(query, num_results=numresults, timeout=4))
 
 def main(args):
-    if args.handshake:
-            print('{"status":"ready"}')
-            return 0
     if args.query == "deurlcruncher_cli":
         os.system("cls")
-        print("Welcome to DeUrlCruncher CLI\n(Get list ofURLs from search query)")
+        print("Welcome to DeUrlCruncher CLI\n(Get list of URLs from search query)\n\t\t\t\t\tby DeSOTA 2023")
 
         while True:
             print("*"*80)
-            _user_quey = input("What Are you loocking for? ('exit' to exit)\n-------------------------------------------\n|")
+            _user_query = input("What Are you loocking for? ('exit' to exit)\n-------------------------------------------\n|")
+            if _user_query in ["exit", "Exit", "EXIT"]:
+                break
+            print("-------------------------------------------")
             _numresults = input("How many results you need: ")
 
-            if _user_quey in ["exit", "Exit", "EXIT"]:
-                break
             
-            url_res = get_urls(_user_quey, int(_numresults)) if int(_numresults) else get_urls(_user_quey)
+            
+            url_res = get_urls(_user_query, int(_numresults)) if int(_numresults) else get_urls(_user_query)
             
             print(f"\nResult: {json.dumps(url_res, indent=2) if not isinstance(url_res, str) else url_res}")
     else:
