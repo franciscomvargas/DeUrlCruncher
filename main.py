@@ -10,7 +10,7 @@ parser.add_argument("-q", "--query",
                     default="deurlcruncher_cli",
                     type=str)
 parser.add_argument("-nr", "--numresults", 
-                    help='Quantity of results',
+                    help='Quantity of results, default 10',
                     default=10,
                     type=int)
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
