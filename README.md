@@ -1,7 +1,7 @@
 # DeUrlCruncher
 Get google URL results from string query
 
-<video src="Assets/readme_files/take_a_peek-deurlcruncher.mp4" controls title="Title"></video>
+https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/0aa3148a-7ecc-4d60-b368-7fb944d54d0c
 
 <details open>
     <summary><h1>Instalation</h1></summary>
