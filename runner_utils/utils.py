@@ -152,7 +152,7 @@ def get_request_text(model_request_dict):
     if 'text_prompt' in model_request_dict["input_args"]:
         _req_text = parse_text(model_request_dict["input_args"]['text_prompt'])
 
-    if not _req_url and 'file' in model_request_dict["input_args"]:
+    if not _req_text and 'file' in model_request_dict["input_args"]:
         if isinstance(model_request_dict["input_args"]["file"], str):
             _req_text = parse_text(model_request_dict["input_args"]['file'])
         elif isinstance(model_request_dict["input_args"]["file"], list):

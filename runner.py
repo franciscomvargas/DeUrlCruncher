@@ -20,8 +20,8 @@ parser.add_argument("-mru", "--model_res_url",
 # :: os.getcwd() = C:\users\[user]\Desota\DeRunner
 # WORKING_FOLDER = os.getcwd()
 APP_PATH = os.path.dirname(os.path.realpath(__file__))
-DESOTA_ROOT_PATH = "\\".join(APP_PATH.split("\\")[:-1])
-USER_PATH = "\\".join(APP_PATH.split("\\")[:-2])
+DESOTA_ROOT_PATH = "\\".join(APP_PATH.split("\\")[:-2])
+USER_PATH = "\\".join(APP_PATH.split("\\")[:-3])
 
 CONFIG_PATH = os.path.join(DESOTA_ROOT_PATH, "Configs")
 USER_CONF_PATH = os.path.join(CONFIG_PATH, "user.config.yaml")
@@ -55,7 +55,7 @@ def get_user_config() -> dict:
     with open( USER_CONF_PATH ) as f_user:
         return yaml.load(f_user, Loader=SafeLoader)
 
-#   > Return latest_services.config.yaml(write if not ignore_update)
+#   > Return (services.config.yaml, latest_services.config.yaml)
 def get_services_config() -> (dict, dict):
     if not (os.path.isfile(SERV_CONF_PATH) or os.path.isfile(LAST_SERV_CONF_PATH)):
         print(f" [SERV_CONF] Not found-> {SERV_CONF_PATH}")
@@ -94,27 +94,24 @@ def main(args):
     
     # Get url from request
     _req_text = get_request_text(model_request_dict)
-    
+
     # Run Model
     if _req_text:
         user_conf = get_user_config()
         if user_conf["system"] == "win":
             # Model Vars
             serv_conf, last_serv_conf = get_services_config()
-            _model_runner_param = serv_conf["services_params"]["franciscomvargas/deurlcruncher"]["win"]      # Model params from services.config.yaml
-            _model_runner_py = os.path.join(USER_PATH, _model_runner_param["runner_py"])    # Python with model runner packages
-            _model_run = os.path.join(APP_PATH, "main.py")    # Python with model runner packages
+            _model_runner_param = serv_conf["services_params"]["franciscomvargas/deurlcruncher"]["win"]     # Model params from services.config.yaml
+            _model_runner_py = os.path.join(USER_PATH, _model_runner_param["runner_py"])                    # Python with model runner packages
+            _model_run = os.path.join(APP_PATH, "main.py")                                                  # Python with model runner packages
             
             _sproc = subprocess.Popen(
                 [
                     _model_runner_py, _model_run, 
-                    "--query", _req_text, 
-                    "--numresults", _numresults,
+                    "--query", str(_req_text), 
+                    "--numresults", str(_numresults),
                     "--respath", out_filepath
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT,
-                creationflags=subprocess.CREATE_NO_WINDOW
+                ]
             )
             # TODO: implement model timeout
             while True:
