@@ -8,7 +8,7 @@ Get google URL results from string query
 
 * If model allready installed this installer function as upgrade, since the the installer webrequest newest installer from github - Take a look into [Installer Optional Arguments](#installer-optional-arguments)
 * Install python if not exist
-* Download miniconda, git and nssm as portables to Desota Folder
+* Download miniconda and git as portables to Desota Folder
 * Clone GitHub Repository
 * Create a virtual environment with miniconda
 
