@@ -1,7 +1,8 @@
 # DeUrlCruncher
 Get google URL results from string query
 
-https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/0aa3148a-7ecc-4d60-b368-7fb944d54d0c
+https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-4d34-b603-e9160da129dc
+
 
 <details open>
     <summary><h1>Instalation</h1></summary>
