@@ -94,6 +94,12 @@ def main(args):
     
     # Get url from request
     _req_text = get_request_text(model_request_dict)
+    with open(os.path.join(APP_PATH, "debug.txt"), "w") as fw:
+        fw.writelines([
+            f"INPUT: '{_req_text}'\n",
+            f"IsINPUT?: {True if _req_text else False}\n"
+        ])
+
 
     # Run Model
     if _req_text:
@@ -128,6 +134,9 @@ def main(args):
     
     with open(out_filepath, "r") as fr:
         deurlcruncher_res = json.loads(fr.read())
+    
+    with open(os.path.join(APP_PATH, "debug.txt"), "a") as fw:
+        fw.write(f"RESULT: {json.dumps(deurlcruncher_res)}")
 
     print(f"[ INFO ] -> DeUrlCruncher Response:{json.dumps(deurlcruncher_res, indent=2)}")
     
