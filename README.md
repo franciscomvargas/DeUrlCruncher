@@ -85,6 +85,8 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models-dashboard) tab
 2. **Select** the model `franciscomvargas\deurlcruncher`
 3. **Press** `Take a Peek`
+    ![DeUrlCruncher_CLI](https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/593b47ed-39cf-4303-9151-a36aeb0c0e09)
+
 
 </details>
 
