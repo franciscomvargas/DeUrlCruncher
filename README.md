@@ -85,6 +85,7 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models-dashboard) tab
 2. **Select** the model `franciscomvargas\deurlcruncher`
 3. **Press** `Take a Peek`
+
     ![DeUrlCruncher_CLI](https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/593b47ed-39cf-4303-9151-a36aeb0c0e09)
 
 
@@ -127,17 +128,20 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
             <td>Search query, empty to enter in cli mode</td>
         </tr>
         <tr>
-            <td><code>-nr</code></td>
-            <td><code>--numresults</code></td>
-            <td>Quantity of URL results, default <code>10</code></td>
+            <td rowspan=2><code>-nr</code></td>
+            <td rowspan=2><code>--numresults</code></td>
+            <td>Quantity of URL results</td>
         </tr>
         <tr>
-            <td rowspan=2><code>-rp</code></td>
-            <td rowspan=2><code>--respath</code></td>
-            <td>Result json file path, default <code>DEFAULT_OUT_PATH</code></td>
+            <td><i>default:</i> <code>10</code></code></td>
         </tr>
         <tr>
-            <td><code>DEFAULT_OUT_PATH</code>: %UserProfile%\Desota\Desota_Models\DeUrlCruncher\<code>f"deurlcruncher_res{int(time.time())}.json"</code></td>
+            <td rowspan=2><code>-nr</code></td>
+            <td rowspan=2><code>--numresults</code></td>
+            <td>Quantity of URL results</td>
+        </tr>
+        <tr>
+            <td><i>default:</i> <code>%UserProfile%</code>\Desota\Desota_Models\DeUrlCruncher\deurlcruncher_res<code>[current_epoch]</code>.json</td>
         </tr>
     </tbody>
 </table>
