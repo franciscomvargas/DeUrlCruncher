@@ -21,7 +21,7 @@ parser.add_argument("-rp", "--respath",
                     type=str)
                 
 # UTILS
-def pcol(obj, template):
+def pcol(obj, template, nostart=False, noend=False):
     '''
     # Description
         print with colors
@@ -68,8 +68,8 @@ def pcol(obj, template):
     else:
         _morfed_obj = obj
 
-    if template in _configs and _morfed_obj:
-        return f"{_configs[template]}{_morfed_obj}{_configs['end']}"
+    if template in _configs and (_morfed_obj or _morfed_obj==""):
+        return f"{_configs[template] if not nostart else ''}{_morfed_obj}{_configs['end'] if not noend else ''}"
     else:
         return obj
 
@@ -84,16 +84,36 @@ def main(args):
 
         while True:
             print(pcol("*"*80, "body"))
-            _user_query = input(pcol("What Are you loocking for? ('exit' to exit)\n-------------------------------------------\n|", "search"))
-            if _user_query in ["exit", "Exit", "EXIT"]:
-                break
-            print(pcol("-------------------------------------------", "search"))
-            _numresults = input(pcol("How many results you need: ", "section"))
 
+            # Get User Query
+            _user_query = ""
+            _exit = False
+            try:
+                _input_query_msg = "".join([pcol("What Are you loocking for? ('exit' to exit)\n-------------------------------------------\n|", "search"), pcol("", "title", noend=True)])
+                _user_query = input(_input_query_msg)
+            except KeyboardInterrupt:
+                _exit = True
+                pass
+            if _user_query in ["exit", "Exit", "EXIT"] or _exit:
+                print(pcol("", "title", nostart=True))
+                break
+            print(f'{pcol("", "title", nostart=True)}{pcol("-------------------------------------------", "search")}')
+
+
+            # Get Number of Results
+            _numresults = input(pcol("Qtty of results (default=5, min=1, max=20): ", "section"))
+            if not _numresults.isnumeric() or int(_numresults)<=0 or int(_numresults)>20:
+                _numresults=5
+            else:
+                _numresults = int(_numresults)
             
             
-            url_res = get_urls(_user_query, int(_numresults)) if int(_numresults) else get_urls(_user_query)
-            
+            # Get Results
+            url_res = get_urls(_user_query, _numresults) if _numresults else get_urls(_user_query)
+            if len(url_res) > _numresults:
+                url_res = url_res[:_numresults]
+
+            # Print Results
             print(pcol(f"\nResult: {json.dumps(url_res, indent=2) if not isinstance(url_res, str) else url_res}\n", "sucess"))
     else:
         _url_res = get_urls(args.query, args.numresults)
