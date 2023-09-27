@@ -136,9 +136,9 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
             <td><i>default:</i> <code>10</code></code></td>
         </tr>
         <tr>
-            <td rowspan=2><code>-nr</code></td>
-            <td rowspan=2><code>--numresults</code></td>
-            <td>Quantity of URL results</td>
+            <td rowspan=2><code>-rp</code></td>
+            <td rowspan=2><code>--respath</code></td>
+            <td>Output json file path</td>
         </tr>
         <tr>
             <td><i>default:</i> <code>%UserProfile%</code>\Desota\Desota_Models\DeUrlCruncher\deurlcruncher_res<code>[current_epoch]</code>.json</td>

@@ -16,7 +16,7 @@ parser.add_argument("-nr", "--numresults",
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_OUT_PATH = os.path.join(CURRENT_PATH, f"deurlcruncher_res{int(time.time())}.txt")
 parser.add_argument("-rp", "--respath", 
-                    help=f'Output text path, default `{DEFAULT_OUT_PATH}`',
+                    help=f'Output json file path, default `{DEFAULT_OUT_PATH}`',
                     default=str(DEFAULT_OUT_PATH),
                     type=str)
                 
