@@ -1,8 +1,10 @@
-
 from googlesearch import search
+import threading
 import json
+import sys
 import os
 import time
+
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-q", "--query", 
@@ -19,7 +21,9 @@ parser.add_argument("-rp", "--respath",
                     help=f'Output json file path, default `{DEFAULT_OUT_PATH}`',
                     default=str(DEFAULT_OUT_PATH),
                     type=str)
-                
+
+DEBUG = True
+    
 # UTILS
 def pcol(obj, template, nostart=False, noend=False):
     '''
@@ -73,8 +77,18 @@ def pcol(obj, template, nostart=False, noend=False):
     else:
         return obj
 
-def get_urls(query, resnum=5):
-    return list(search(query, num_results=resnum, timeout=4))
+# search thread
+class SearchThread(threading.Thread):
+    # constructor
+    def __init__(self, query, resnum=5):
+        threading.Thread.__init__(self, daemon=True)
+        self.query = query
+        self.resnum = resnum
+        self.res = None
+
+    # function executed in a new thread
+    def run(self):
+        self.res = list(search(self.query, num_results=self.resnum, timeout=(5,5)))
 
 def main(args):
     if args.query == "deurlcruncher_cli":
@@ -96,7 +110,7 @@ def main(args):
                 pass
             if _user_query in ["exit", "Exit", "EXIT"] or _exit:
                 print(pcol("", "title", nostart=True))
-                break
+                return
             print(f'{pcol("", "title", nostart=True)}{pcol("-------------------------------------------", "search")}')
 
 
@@ -109,14 +123,42 @@ def main(args):
             
             
             # Get Results
-            url_res = get_urls(_user_query, _resnum) if _resnum else get_urls(_user_query)
-            if len(url_res) > _resnum:
-                url_res = url_res[:_resnum]
+            _start_time = time.time() if DEBUG else 0
+            # url_res = get_urls(_user_query, _resnum) if _resnum else get_urls(_user_query)
+            while True:
+                tsearch = SearchThread(_user_query, _resnum) if _resnum else SearchThread(_user_query)
+                tsearch.start()
+                tsearch.join(timeout=15)
+                url_res = tsearch.res
+                if not url_res and _resnum != 1:
+                    _resnum = 1
+                else:
+                    break
+            
+            if DEBUG:
+                print(f" [ DEBUG ] - TimeOut: {tsearch.is_alive()}")
+                print(f" [ DEBUG ] - elapsed time (secs): {time.time()-_start_time}")
 
             # Print Results
-            print(pcol(f"\nResult: {json.dumps(url_res, indent=2) if not isinstance(url_res, str) else url_res}\n", "sucess"))
+            if url_res:
+                if len(url_res) > _resnum:
+                    url_res = url_res[:_resnum]
+                print(pcol(f"\nResult: {json.dumps(url_res, indent=2) if not isinstance(url_res, str) else url_res}\n", "sucess"))
+            else:
+                print(pcol("No Results found!\n", "fail"))
+
     else:
-        _url_res = get_urls(args.query, args.resnum)
+        # _url_res = get_urls(args.query, args.resnum)
+        _resnum = args.resnum
+        while True:
+            tsearch = SearchThread(args.query, _resnum)
+            tsearch.start()
+            tsearch.join(timeout=15)
+            _url_res = tsearch.res
+            if not _url_res and _resnum != 1:
+                _resnum = 1
+            else:
+                break
         if _url_res:
             with open(args.respath, "w") as fw:
                 fw.write(json.dumps(_url_res))
