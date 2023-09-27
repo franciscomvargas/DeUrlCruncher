@@ -24,7 +24,7 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 2. **Uncompress** File
 3. **Run** .BAT file
 4. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-services) tab
-5. **Select** the Available Model `franciscomvargas\deurlcruncher`
+5. **Select** the Available Tool `franciscomvargas\deurlcruncher`
 6. **Press** `Start Instalation`
 
 </details>
