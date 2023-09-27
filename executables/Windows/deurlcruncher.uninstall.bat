@@ -1,7 +1,7 @@
 @ECHO OFF
 :: Uninstalation VARS
 set model_name=Desota/DeUrlCruncher
-set uninstaller_header=DeScraper Uninstaller - Sad to say goodbye ):
+set uninstaller_header=DeUrlCruncher Uninstaller - Sad to say goodbye ):
 :: - User Path
 :: %~dp0 = C:\users\[user]\Desota\Desota_Models\DeScraper\executables\Windows
 for %%a in ("%~dp0..\..\..\..\..") do set "root_path=%%~fa"
