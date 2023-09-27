@@ -9,7 +9,7 @@ parser.add_argument("-q", "--query",
                     help='Search query, empty to enter in cli mode',
                     default="deurlcruncher_cli",
                     type=str)
-parser.add_argument("-nr", "--numresults", 
+parser.add_argument("-rn", "--resnum", 
                     help='Quantity of results',
                     default=10,
                     type=int)
@@ -73,8 +73,8 @@ def pcol(obj, template, nostart=False, noend=False):
     else:
         return obj
 
-def get_urls(query, numresults=5):
-    return list(search(query, num_results=numresults, timeout=4))
+def get_urls(query, resnum=5):
+    return list(search(query, num_results=resnum, timeout=4))
 
 def main(args):
     if args.query == "deurlcruncher_cli":
@@ -101,22 +101,22 @@ def main(args):
 
 
             # Get Number of Results
-            _numresults = input(pcol("Qtty of results (default=5, min=1, max=20): ", "section"))
-            if not _numresults.isnumeric() or int(_numresults)<=0 or int(_numresults)>20:
-                _numresults=5
+            _resnum = input(pcol("Qtty of results (default=5, min=1, max=20): ", "section"))
+            if not _resnum.isnumeric() or int(_resnum)<=0 or int(_resnum)>20:
+                _resnum=5
             else:
-                _numresults = int(_numresults)
+                _resnum = int(_resnum)
             
             
             # Get Results
-            url_res = get_urls(_user_query, _numresults) if _numresults else get_urls(_user_query)
-            if len(url_res) > _numresults:
-                url_res = url_res[:_numresults]
+            url_res = get_urls(_user_query, _resnum) if _resnum else get_urls(_user_query)
+            if len(url_res) > _resnum:
+                url_res = url_res[:_resnum]
 
             # Print Results
             print(pcol(f"\nResult: {json.dumps(url_res, indent=2) if not isinstance(url_res, str) else url_res}\n", "sucess"))
     else:
-        _url_res = get_urls(args.query, args.numresults)
+        _url_res = get_urls(args.query, args.resnum)
         if _url_res:
             with open(args.respath, "w") as fw:
                 fw.write(json.dumps(_url_res))

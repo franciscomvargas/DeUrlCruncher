@@ -77,7 +77,7 @@ def main(args):
     '''
 
     #---INPUT---# TODO (PRO ARGS)
-    _numresults = 10
+    _resnum = 5
     #---INPUT---#
 
     # Time when grabed
@@ -115,7 +115,7 @@ def main(args):
                 [
                     _model_runner_py, _model_run, 
                     "--query", str(_req_text), 
-                    "--numresults", str(_numresults),
+                    "--resnum", str(_resnum),
                     "--respath", out_filepath
                 ]
             )

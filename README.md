@@ -128,8 +128,8 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
             <td>Search query, empty to enter in cli mode</td>
         </tr>
         <tr>
-            <td rowspan=2><code>-nr</code></td>
-            <td rowspan=2><code>--numresults</code></td>
+            <td rowspan=2><code>-rn</code></td>
+            <td rowspan=2><code>--resnum</code></td>
             <td>Quantity of URL results</td>
         </tr>
         <tr>
@@ -148,7 +148,7 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 
 * Example: 
     ```cmd
-    %UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py --query "turn coffee into software" --numresults 25 --respath %UserProfile%\desktop\duc_tmp_res.json && notepad %UserProfile%\desktop\duc_tmp_res.json
+    %UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py --query "turn coffee into software" --resnum 25 --respath %UserProfile%\desktop\duc_tmp_res.json && notepad %UserProfile%\desktop\duc_tmp_res.json
 
     ```
 </details>
