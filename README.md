@@ -7,30 +7,28 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 <details open>
     <summary><h1>Instalation</h1></summary>
 
+## Use DeSOTA official [Manager & Tools](https://github.com/DeSOTAai/DeManagerTools#instalation)
+
+1. [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://desota.net/assistant/download.php?file=demanagertools&system=win)
+
+2. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-desota-models-and-tools) tab
+
+3. **Select** the Available Tool `franciscomvargas\deurlcruncher`
+
+4. **Press** `Start Instalation`
+
+<details>
+    <summary><h2>Manual Windows Instalation</h2></summary>
+
+### Installer Description:
+
 * If model allready installed this installer function as upgrade, since the the installer webrequest newest installer from github - Take a look into [Installer Optional Arguments](#installer-optional-arguments)
 * Install python if not exist
 * Download miniconda and git as portables to Desota Folder
 * Clone GitHub Repository
 * Create a virtual environment with miniconda
 
-<details open>
-    <summary><h2>Use DeSOTA official <a href="https://github.com/DeSOTAai/DeManagerTools/blob/main/README.md">Manager Tools</a></h2></summary>
-
-1. [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/DeSOTAai/DeManagerTools/blob/main/executables/Windows/demanagertools.install.bat)
-
-<!-- TODO: Convert desota host into HTTPS -->
-<!-- [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](http://129.152.27.36/assistant/download.php?system=win&file=demanagertools) -->
-
-2. **Uncompress** File
-3. **Run** .BAT file
-4. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-services) tab
-5. **Select** the Available Tool `franciscomvargas\deurlcruncher`
-6. **Press** `Start Instalation`
-
-</details>
-
-<details open>
-    <summary><h2>Manual Windows Instalation</h2></summary>
+### Installer Procedure:
 
 * Go to CMD as Administrator (command prompt):
     * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
@@ -42,7 +40,7 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
     powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/franciscomvargas/DeUrlCruncher/main/executables/Windows/deurlcruncher.install.bat -OutFile ~\deurlcruncher_installer.bat" && call %UserProfile%\deurlcruncher_installer.bat && del %UserProfile%\deurlcruncher_installer.bat
 
     ```
-### Installer Optional Arguments
+### Installer Optional Arguments:
 
 <table>
     <thead>
@@ -82,8 +80,10 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 <details open>
   <summary><h2>Open CLI (Command Line Interface) with DeSOTA - Manager Tools</h2></summary>
 
-1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models-dashboard) tab
+1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models--tools-dashboard) tab
+
 2. **Select** the model `franciscomvargas\deurlcruncher`
+
 3. **Press** `Take a Peek`
 
     ![DeUrlCruncher_CLI](https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/593b47ed-39cf-4303-9151-a36aeb0c0e09)
@@ -96,8 +96,7 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 
 * Go to CMD (command prompt):
   * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
-  * Search: `cmd` 
-  * <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>↵ Enter</kbd>
+  * Enter: `cmd` 
 
 <details open>
   <summary><h3>Open CLI (Command Line Interface)</h3></summary>
@@ -159,22 +158,22 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 <details open>
     <summary><h1>Uninstalation</h1></summary>
 
-<details open>
-  <summary><h2>Use DeSOTA - Manager Tools</h2></summary>
+## Use DeSOTA official Manager & Tools
 
-1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models-dashboard) tab
+1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models--tools-dashboard) tab
+
 2. **Select** the model `franciscomvargas\deurlcruncher`
+
 3. **Press** `Uninstall`
 
-<details open>
+<details>
     <summary><h2>Manual Windows Uninstalation</h2></summary>
 
 * Go to CMD (command prompt):
   * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
-  * Search: `cmd` 
-  * <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>↵ Enter</kbd>
+  * Enter: `cmd` 
 
-* Copy-Paste the following comands: 
+* Copy-Paste the following comand: 
     ```cmd
     %UserProfile%\Desota\DeRunner\executables\Windows\derunner.uninstall.bat
 
