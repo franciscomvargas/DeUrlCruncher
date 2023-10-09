@@ -1,9 +1,5 @@
 from googlesearch import search
-import threading
-import json
-import sys
-import os
-import time
+import os, sys, threading, time, json
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -92,7 +88,10 @@ class SearchThread(threading.Thread):
 
 def main(args):
     if args.query == "deurlcruncher_cli":
-        os.system("cls")
+        if sys.platform == "win32":
+            os.system("cls")
+        else:
+            os.system("clear")
         print(pcol("Welcome to DeUrlCruncher CLI ", "header1"), pcol("by © DeSOTA, 2023", "header2"))
         print(pcol("Get list of URLs from search query\n", "body"))
 
