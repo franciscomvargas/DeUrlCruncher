@@ -1,13 +1,13 @@
 @ECHO OFF
 :: Instalation VARS
-set model_name=DeUrlCruncher1
+set model_name=DeUrlCruncher
 :: - Model GIT
 set model_release=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip
 :: - Model Path
 :: %~dp0 = C:\Users\[username]Desota\Desota_Models\DeUrlCruncher\executables\windows
-for %%a in ("%~dp0\..\..\..\..\..\") do set "user_path=%%~fa"
-for %%a in ("%~dp0\..\..") do set "path_test=%%~fa"
-set model_path=%user_path%Desota\Desota_Models\%model_name%
+for %%a in ("%~dp0\..\..\..\..\..") do set "user_path=%%~fa"
+for %%a in ("%~dp0\..\..\..\..\..\..") do set "test_path=%%~fa"
+for %%a in ("%UserProfile%\..") do set "test1_path=%%~fa"
 
 
 :: -- Edit bellow if you're felling lucky ;) -- https://youtu.be/5NV6Rdv1a3I
@@ -73,13 +73,32 @@ set ansi_end=%ESC%[0m
 
 ECHO %header%Welcome to %model_name% Setup!%ansi_end%
 
+:: TEST PATH
+IF "%test_path%" EQU "C:\Users" GOTO TEST_PASSED
+IF "%test_path%" EQU "C:\users" GOTO TEST_PASSED
+IF "%test_path%" EQU "c:\Users" GOTO TEST_PASSED
+IF "%test_path%" EQU "c:\users" GOTO TEST_PASSED
+IF "%test1_path%" EQU "C:\Users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "C:\users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "c:\Users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "c:\users" GOTO TEST1_PASSED
+ECHO %fail%Error: Can't Resolve Request!%ansi_end%
+ECHO %fail%DEV TIP: Run Command Without Admin Rights!%ansi_end%
+PAUSE
+exit
+:TEST1_PASSED
+set user_path=%UserProfile%
+:TEST_PASSED
+set model_path=%user_path%\Desota\Desota_Models\%model_name%
+
 :: Model Folder
 :: DEV TIP: call powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" &&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 && del %user_path%\%model_name%_release.zip
-IF %path_test% NEQ %model_path% (
-    ECHO %fail%Error: Please Install Model Before running the Setup %ansi_end%
-    ECHO %fail1%CMD TIP: powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%%model_name%_release.zip" ^&^&  tar -xzvf %user_path%%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%%model_name%_release.zip %ansi_end%
+IF NOT EXIST %model_path% (
+    ECHO %fail%Error: Model not installed correctly %ansi_end%
+    ECHO %fail%CMD TIP: Install model with the following command:%ansi_end%
+    ECHO     powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" ^&^&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%\%model_name%_release.zip
     PAUSE
-    GOTO EOF_IN
+    exit
 )
 
 :: Move to Project Folder
@@ -88,21 +107,21 @@ call cd %model_path% >NUL 2>NUL
 
 :: Install Conda Required
 ECHO %info_h1%Step 2/3 - Install Miniconda for Project%ansi_end%
-call mkdir %user_path%Desota\Portables >NUL 2>NUL
-IF NOT EXIST %user_path%Desota\Portables\miniconda3\condabin\conda.bat goto installminiconda
+call mkdir %user_path%\Desota\Portables >NUL 2>NUL
+IF NOT EXIST %user_path%\Desota\Portables\miniconda3\condabin\conda.bat goto installminiconda
 goto skipinstallminiconda
 :installminiconda
-IF %PROCESSOR_ARCHITECTURE%==AMD64 powershell -command "Invoke-WebRequest -Uri %miniconda64% -OutFile %user_path%miniconda_installer.exe" && start /B /WAIT %user_path%miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%user_path%Desota\Portables\miniconda3 && del %user_path%\miniconda_installer.exe && goto skipinstallminiconda
-IF %PROCESSOR_ARCHITECTURE%==x86 powershell -command "Invoke-WebRequest -Uri %miniconda32% -OutFile %user_path%miniconda_installer.exe" && start /B /WAIT %user_path%miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%model_path%Desota\Portables\miniconda3 && del %user_path%\miniconda_installer.exe && && goto skipinstallminiconda
+IF %PROCESSOR_ARCHITECTURE%==AMD64 powershell -command "Invoke-WebRequest -Uri %miniconda64% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%user_path%\Desota\Portables\miniconda3 && del %user_path%\\miniconda_installer.exe && goto skipinstallminiconda
+IF %PROCESSOR_ARCHITECTURE%==x86 powershell -command "Invoke-WebRequest -Uri %miniconda32% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%model_path%Desota\Portables\miniconda3 && del %user_path%\\miniconda_installer.exe && && goto skipinstallminiconda
 :skipinstallminiconda
 
 :: SET Miniconda PATH
-ECHO %info_h2%Setting MiniConda Path...%ansi_end% 
-set conda_path=%user_path%Desota\Portables\miniconda3\condabin\conda_%model_name%.bat
+ECHO %info_h2%Creating Model Dedicated MiniConda Path...%ansi_end% 
+set conda_path=%user_path%\Desota\Portables\miniconda3\condabin\conda_%model_name%.bat
 IF EXIST %conda_path% (
     call del %conda_path%
 )
-call copy %user_path%Desota\Portables\miniconda3\condabin\conda.bat %conda_path%
+call copy %user_path%\Desota\Portables\miniconda3\condabin\conda.bat %conda_path%
 
 :: Create/Activate Conda Virtual Environment
 ECHO %info_h2%Creating MiniConda Environment...%ansi_end% 
