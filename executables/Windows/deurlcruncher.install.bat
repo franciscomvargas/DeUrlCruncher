@@ -1,4 +1,21 @@
 @ECHO OFF
+:: DEPRECATED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 :: Instalation VARS
 :: - Model GIT
 set model_git=https://github.com/franciscomvargas/deurlcruncher.git
