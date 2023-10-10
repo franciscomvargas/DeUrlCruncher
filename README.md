@@ -25,55 +25,61 @@ TODO
 <details>
     <summary><h2>Manual Windows Instalation</h2></summary>
 
-### Installer Description:
-
-* If model allready installed this installer function as upgrade, since the the installer webrequest newest installer from github - Take a look into [Installer Optional Arguments](#installer-optional-arguments)
-* Install python if not exist
-* Download miniconda and git as portables to Desota Folder
-* Clone GitHub Repository
-* Create a virtual environment with miniconda
-
-### Installer Procedure:
-
-* Go to CMD as Administrator (command prompt):
+* Go to CMD (command prompt):
     * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
     * Search: `cmd` 
-    * <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>↵ Enter</kbd>
 
-* Copy-Paste the following comands: 
-    ```cmd
-    powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/franciscomvargas/DeUrlCruncher/main/executables/Windows/deurlcruncher.install.bat -OutFile ~\deurlcruncher_installer.bat" && call %UserProfile%\deurlcruncher_installer.bat && del %UserProfile%\deurlcruncher_installer.bat
 
-    ```
-### Installer Optional Arguments:
-
-<table>
-    <thead>
-        <tr>
-            <th>arg</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=3>/reinstall</td>
-            <td>Overwrite project when re-installing</td>
-        </tr>
-        <tr>
-            <td>Delete project service when re-installing</td>
-        </tr>
-        <tr>
-            <td>Install without requiring user interaction</td>
-        </tr>
-    </tbody>
-</table>
-
-* Comand (Install with overwrite permission):
-
+1. Create Model Folder:
 ```cmd
-powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/franciscomvargas/DeUrlCruncher/main/executables/Windows/deurlcruncher.install.bat -OutFile ~\deurlcruncher_installer.bat" && call %UserProfile%\deurlcruncher_installer.bat /reinstall && del %UserProfile%\deurlcruncher_installer.bat
+mkdir %UserProfile%\Desota\Desota_Models\DeUrlCruncher
 
 ```
+
+2. Download Last Release:
+```cmd
+powershell -command "Invoke-WebRequest -Uri https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip -OutFile %UserProfile%\DeUrlCruncher_release.zip" 
+
+```
+
+3. Uncompress Release:
+```cmd
+tar -xzvf %UserProfile%\DeUrlCruncher_release.zip -C %UserProfile%\Desota\Desota_Models\DeUrlCruncher --strip-components 1 
+
+```
+
+4. Delete Compressed Release:
+```cmd
+del %UserProfile%\DeUrlCruncher_release.zip
+
+```
+
+
+### Setup:
+
+5. Setup:
+```cmd
+%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug
+
+```
+
+*  Optional Arguments:
+    <table>
+        <thead>
+            <tr>
+                <th>arg</th>
+                <th>Description</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>/debug</td>
+                <td>Echo ON setup commands</td>
+                <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug</code></td>
+            </tr>
+        </tbody>
+    </table>
     
     
 </details>
@@ -106,11 +112,10 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
 <details open>
   <summary><h3>Open CLI (Command Line Interface)</h3></summary>
 
-* Copy-Paste the following comands: 
-    ```cmd
-    %UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py
+```cmd
+%UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py
 
-    ```
+```
 
 <details open>
   <summary><h3>Direct comand request</h3></summary>
@@ -178,23 +183,16 @@ powershell -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/fr
   * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
   * Enter: `cmd` 
 
-* Copy-Paste the following comand: 
-    ```cmd
-    %UserProfile%\Desota\DeRunner\executables\Windows\derunner.uninstall.bat
+```cmd
+%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.uninstall.bat
 
-    ```
-    * Uninstaller Optional `Arguments`
+```
 
-        |arg|Description|
-        |---|---|
-        |/Q|Uninstall without requiring user interaction|
-        
-        `Uninstall Quietly`
-        
-        ```cmd
-        %UserProfile%\Desota\Desota_Models\NeuralQA\neuralqa\executables\Windows\neuralqa.uninstall.bat /Q
+* Optional `Arguments`
 
-        ```
+    |arg|Description|Example
+    |---|---|---|
+    |/Q|Uninstall without requiring user interaction|`%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.uninstall.bat /Q`
       
 </details>
 </details>
