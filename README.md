@@ -110,6 +110,7 @@ wget https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.
 
 3. Uncompress Release:
 ```cmd
+sudo apt install libarchive-tools -y
 bsdtar -xzvf ~/DeUrlCruncher_release.zip -C ~/Desota/Desota_Models/DeUrlCruncher --strip-components=1
 
 ```
