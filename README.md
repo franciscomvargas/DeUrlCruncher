@@ -15,11 +15,6 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
     
     [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=linux)](https://github.com/DeSOTAai/DeManagerTools#instalation)
 
-<!--
-TODO
-[![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://desota.net/assistant/download.php?file=demanagertools&system=win)
--->
-
 2. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-desota-models-and-tools) tab
 
 3. **Select** the Available Tool `franciscomvargas\deurlcruncher`
@@ -36,6 +31,7 @@ TODO
 
 1. Create Model Folder:
 ```cmd
+rmdir /S /Q %UserProfile%\Desota\Desota_Models\DeUrlCruncher
 mkdir %UserProfile%\Desota\Desota_Models\DeUrlCruncher
 
 ```
@@ -82,6 +78,11 @@ del %UserProfile%\DeUrlCruncher_release.zip
                 <td>Setup with debug Echo ON</td>
                 <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug</code></td>
             </tr>
+            <tr>
+                <td>/startmodel</td>
+                <td>Start Model at end of setup</td>
+                <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /startmodel</code></td>
+            </tr>
         </tbody>
     </table>
     
@@ -96,7 +97,8 @@ del %UserProfile%\DeUrlCruncher_release.zip
 
 1. Create Model Folder:
 ```cmd
-mkdir ~/Desota/Desota_Models/DeUrlCruncher
+rm -rf ~/Desota/Desota_Models/DeUrlCruncher
+mkdir -p ~/Desota/Desota_Models/DeUrlCruncher
 
 ```
 
@@ -107,9 +109,8 @@ wget https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.
 ```
 
 3. Uncompress Release:
-<!-- tar -xzvf %UserProfile%\DeUrlCruncher_release.zip -C %UserProfile%\Desota\Desota_Models\DeUrlCruncher --strip-components 1  -->
 ```cmd
-TODO
+bsdtar -xzvf ~/DeUrlCruncher_release.zip -C ~/Desota/Desota_Models/DeUrlCruncher --strip-components=1
 
 ```
 
@@ -142,6 +143,11 @@ bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.
                 <td>-d</td>
                 <td>Setup with debug Echo ON</td>
                 <td><code>bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -d</code></td>
+            </tr>
+            <tr>
+                <td>-s</td>
+                <td>Start Model at end of setup</td>
+                <td><code>bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -s</code></td>
             </tr>
         </tbody>
     </table>
@@ -251,7 +257,7 @@ bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.
     * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
 
 ```cmd
-~/Desota/Desota_Models/DeUrlCruncher/env/bin/python3 ~/Desota/Desota_Models/DeUrlCruncher/main.py --query "turn coffee into code" --resnum 25 --respath ~/duc_tmp_res.json && ~/duc_tmp_res.json
+~/Desota/Desota_Models/DeUrlCruncher/env/bin/python3 ~/Desota/Desota_Models/DeUrlCruncher/main.py --query "turn coffee into code" --resnum 25 --respath ~/duc_tmp_res.json && open ~/duc_tmp_res.json
 
 ```
 </details>
