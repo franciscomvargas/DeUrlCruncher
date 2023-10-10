@@ -113,4 +113,7 @@ IF EXIST %model_path% (
     ECHO %sucess%%model_name% Uninstalation Completed!%ansi_end%
     timeout 1 >NUL 2>NUL
 )
+IF %arg1_bool% EQU 1 (
+    del %root_path%\%BASENAME% >NUL 2>NUL && exit
+)
 del %root_path%\%BASENAME% >NUL 2>NUL && PAUSE && exit
