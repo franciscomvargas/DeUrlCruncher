@@ -83,7 +83,7 @@ IF "%test1_path%" EQU "C:\users" GOTO TEST1_PASSED
 IF "%test1_path%" EQU "c:\Users" GOTO TEST1_PASSED
 IF "%test1_path%" EQU "c:\users" GOTO TEST1_PASSED
 ECHO %fail%Error: Can't Resolve Request!%ansi_end%
-ECHO %fail%DEV TIP: Run Command Without Admin Rights!%ansi_end%
+ECHO %fail%[ DEV TIP ] Run Command Without Admin Rights!%ansi_end%
 PAUSE
 exit
 :TEST1_PASSED
@@ -95,8 +95,9 @@ set model_path=%user_path%\Desota\Desota_Models\%model_name%
 :: DEV TIP: call powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" &&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 && del %user_path%\%model_name%_release.zip
 IF NOT EXIST %model_path% (
     ECHO %fail%Error: Model not installed correctly %ansi_end%
-    ECHO %fail%CMD TIP: Install model with the following command:%ansi_end%
-    ECHO     powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" ^&^&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%\%model_name%_release.zip
+    ECHO %fail1%[ CMD TIP ] Download Release with this command:%ansi_end%
+    ECHO     IF EXIST %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^( rmdir /S /Q %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^) ELSE ^( ECHO New Install! ^) ^&^& mkdir %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^&^& powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" ^&^&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%\%model_name%_release.zip
+    ECHO  %ESC%P
     PAUSE
     exit
 )
@@ -159,19 +160,18 @@ call %conda_path% deactivate >NUL 2>NUL
 
 :: Start Runner Service?
 IF %arg1_bool% EQU 0 GOTO NOSTART
-start /B /WAIT %model_start%
+start %model_path%\env\python %model_path%\main.py
 ECHO %sucess%Instalation Completed!%ansi_end%
 ECHO %info_h2%model name  : %model_name%%ansi_end%
 :: PAUSE FOR DEBUG
-IF %arg2_bool% EQU 0 GOTO EOF_IN
+IF %arg2_bool% EQU 0 exit
 PAUSE
-GOTO EOF_IN
+exit
 
 :NOSTART
 ECHO %sucess%%model_name% Instalation Completed!%ansi_end%
 ECHO %info_h2%model name  : %model_name%%ansi_end% 
 :: PAUSE FOR DEBUG
-IF %arg2_bool% EQU 0 GOTO EOF_IN
+IF %arg2_bool% EQU 0 exit
 PAUSE
-:EOF_IN
 exit
