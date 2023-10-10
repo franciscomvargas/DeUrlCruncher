@@ -7,9 +7,13 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 <details open>
     <summary><h1>Instalation</h1></summary>
 
-## Use DeSOTA official [Manager & Tools](https://github.com/DeSOTAai/DeManagerTools#instalation)
+## Use DeSOTA official [Manager & Tools](https://github.com/DeSOTAai/DeManagerTools#readme)
 
-1. [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://github.com/DeSOTAai/DeManagerTools/releases/download/v0.0.2/dmt_installer-v0.0.2-win64.zip)
+1. Choose Platform:
+
+    [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://github.com/DeSOTAai/DeManagerTools/releases/download/v0.0.2/dmt_installer-v0.0.2-win64.zip)
+    
+    [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=linux)](https://github.com/DeSOTAai/DeManagerTools#instalation)
 
 <!--
 TODO
@@ -59,7 +63,7 @@ del %UserProfile%\DeUrlCruncher_release.zip
 
 5. Setup:
 ```cmd
-%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug
+%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat
 
 ```
 
@@ -75,8 +79,69 @@ del %UserProfile%\DeUrlCruncher_release.zip
         <tbody>
             <tr>
                 <td>/debug</td>
-                <td>Echo ON setup commands</td>
+                <td>Setup with debug Echo ON</td>
                 <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug</code></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    
+</details>
+<details>
+    <summary><h2>Manual Linux Instalation</h2></summary>
+
+* Go to Terminal:
+    * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
+
+
+1. Create Model Folder:
+```cmd
+mkdir ~/Desota/Desota_Models/DeUrlCruncher
+
+```
+
+2. Download Last Release:
+```cmd
+wget https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip -O ~/DeUrlCruncher_release.zip
+
+```
+
+3. Uncompress Release:
+<!-- tar -xzvf %UserProfile%\DeUrlCruncher_release.zip -C %UserProfile%\Desota\Desota_Models\DeUrlCruncher --strip-components 1  -->
+```cmd
+TODO
+
+```
+
+4. Delete Compressed Release:
+```cmd
+rm -rf ~/DeUrlCruncher_release.zip
+
+```
+
+
+### Setup:
+
+5. Setup:
+```cmd
+bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash
+
+```
+
+*  Optional Arguments:
+    <table>
+        <thead>
+            <tr>
+                <th>arg</th>
+                <th>Description</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>-d</td>
+                <td>Setup with debug Echo ON</td>
+                <td><code>bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -d</code></td>
             </tr>
         </tbody>
     </table>
@@ -103,21 +168,35 @@ del %UserProfile%\DeUrlCruncher_release.zip
 </details>
 
 <details open>
-    <summary><h2>Manual Windows Operations</h3></summary>
+    <summary><h2>Manual Operations</h3></summary>
+
+<details>
+  <summary><h3>Open CLI (Command Line Interface)</h3></summary>
+
+### Windows
 
 * Go to CMD (command prompt):
   * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
   * Enter: `cmd` 
-
-<details open>
-  <summary><h3>Open CLI (Command Line Interface)</h3></summary>
 
 ```cmd
 %UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py
 
 ```
 
-<details open>
+### Linux
+
+* Go to Terminal:
+    * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
+
+```cmd
+~/Desota/Desota_Models/DeUrlCruncher/env/bin/python3 ~/Desota/Desota_Models/DeUrlCruncher/main.py
+
+```
+
+</details>
+
+<details>
   <summary><h3>Direct comand request</h3></summary>
 
 #### DeUrlCruncher Arguments
@@ -155,12 +234,26 @@ del %UserProfile%\DeUrlCruncher_release.zip
     </tbody>
 </table>
 
-* Example: 
-    ```cmd
-    %UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py --query "turn coffee into code" --resnum 25 --respath %UserProfile%\desktop\duc_tmp_res.json && notepad %UserProfile%\desktop\duc_tmp_res.json
+### Windows Example
 
-    ```
-</details>
+* Go to CMD (command prompt):
+  * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
+  * Enter: `cmd` 
+
+```cmd
+%UserProfile%\Desota\Desota_Models\DeUrlCruncher\env\python %UserProfile%\Desota\Desota_Models\DeUrlCruncher\main.py --query "turn coffee into code" --resnum 25 --respath %UserProfile%\desktop\duc_tmp_res.json && notepad %UserProfile%\desktop\duc_tmp_res.json
+
+```
+
+### Linux Example
+
+* Go to Terminal:
+    * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
+
+```cmd
+~/Desota/Desota_Models/DeUrlCruncher/env/bin/python3 ~/Desota/Desota_Models/DeUrlCruncher/main.py --query "turn coffee into code" --resnum 25 --respath ~/duc_tmp_res.json && ~/duc_tmp_res.json
+
+```
 </details>
 </details>
 </details>
@@ -168,7 +261,7 @@ del %UserProfile%\DeUrlCruncher_release.zip
 <details open>
     <summary><h1>Uninstalation</h1></summary>
 
-## Use DeSOTA official Manager & Tools
+## Use DeSOTA official [Manager & Tools](https://github.com/DeSOTAai/DeManagerTools#readme)
 
 1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models--tools-dashboard) tab
 
@@ -195,5 +288,25 @@ del %UserProfile%\DeUrlCruncher_release.zip
     |/Q|Uninstall without requiring user interaction|`%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.uninstall.bat /Q`
       
 </details>
+
+<details>
+    <summary><h2>Manual Linux Uninstalation</h2></summary>
+
+* Go to Terminal:
+    * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
+
+```cmd
+bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash
+
+```
+
+* Optional `Arguments`
+
+    |arg|Description|Example
+    |---|---|---|
+    |-q|Uninstall without requiring user interaction|`bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash -q`
+      
+</details>
+
 </details>
 
