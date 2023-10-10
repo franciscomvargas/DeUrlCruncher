@@ -62,7 +62,7 @@ fi
 
 if ( test -d "$MODEL_PATH" ); then
     echo 'Uninstall Fail'
-    echo "DEV TIP: Delete this folder:"
+    echo ">DEV TIP< Delete this folder:"
     echo "    $MODEL_PATH"
 else
     echo 'Uninstalation Completed!'
