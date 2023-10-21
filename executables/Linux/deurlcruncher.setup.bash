@@ -169,6 +169,6 @@ echo
 echo 'Setup Completed!'
 if [ "$startmodel" -eq "1" ]; 
 then
-    ~/Desota/Desota_Models/DeUrlCruncher/env/bin/python3 ~/Desota/Desota_Models/DeUrlCruncher/main.py
+    $MODEL_PATH/env/bin/python3 $MODEL_PATH/main.py
 fi
 exit
