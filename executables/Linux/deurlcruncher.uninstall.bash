@@ -1,36 +1,52 @@
 #!/bin/bash
-# RUN WITHOUT SUDO
-whoami=$(id -u)
-if [ "$whoami" -eq 0  ];
-then 
-    echo "Please run without root"
-    exit
-fi
 
-
+# GET USER PATH
+get_user=$(who)
+USER=${get_user%% *}
+USER_HOME="/home/$USER"
 # Setup VARS
 MODEL_NAME=DeUrlCruncher
-
 # - Model Path
-#   $PWD = \home\[username]\Desota\Desota_Models\DeUrlCruncher\executables\Linux
-# PATH_TEST=~/Desota/Desota_Models/$MODEL_NAME/executables/Linux
-MODEL_PATH=~/Desota/Desota_Models/$MODEL_NAME
+MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
 
-SCRIPTPATH=$(realpath -s "$0")
-BASENAME=$(basename $SCRIPTPATH)
+# SUPER USER RIGHTS
+[ "$UID" -eq 0 ] || { 
+    echo "This script must be run as root to delete a systemctl service!"; 
+    echo "Usage:"; 
+    echo "sudo $0 [-q] [-h]";
+    echo "    -q = Hands Free (quiet)";
+    echo "    -h = Help";
+    echo "    [] = Optional";
+    exit 1;
+}
 
-
-# IPUT ARGS - -s="Start Model Service"; -d="Print stuff and Pause at end"
+# IPUT ARGS: -q="Quiet uninstall"; -p="User Password"
 quiet=0
-while getopts qe: flag
+while getopts qhe: flag
 do
     case $flag in
-        q) quiet=1;;
-        ?) echo "Usage: %s: [-q]";;
+        q)  quiet=1;;
+        h)  { 
+            echo "Usage:"; 
+            echo "sudo $0 [-q] [-h]";
+            echo "    -q = Hands Free (quiet)";
+            echo "    -h = Help";
+            echo "    [] = Optional";
+            exit 1;
+        };;
+        ?)  { 
+            echo "Usage:"; 
+            echo "sudo $0 [-q] [-h]";
+            echo "    -q = Hands Free (quiet)";
+            echo "    -h = Help";
+            echo "    [] = Optional";
+            exit 1;
+        };;
     esac
 done
 
-
+SCRIPTPATH=$(realpath -s "$0")
+BASENAME=$(basename $SCRIPTPATH)
 # Copy File from future  deleted folder
 if [ "$SCRIPTPATH" != "$HOME/$BASENAME" ];
 then
@@ -43,14 +59,31 @@ then
         /bin/bash ~/$BASENAME -q
     fi
     exit
-    # echo "Error:"
-    # echo "# Description: Uninstall path dont correspond to expected:"
-    # echo "    current_path = $SCRIPTPATH"
-    # echo "    expected = $PATH_TEST/$BASENAME"
-    # exit
 else
     echo "Input Arguments:"
     echo "    quiet [-q]: $quiet"
+fi
+
+# Copy File from future  deleted folder
+SCRIPTPATH=$(realpath -s "$0")
+BASENAME=$(basename $SCRIPTPATH)
+if test "$SCRIPTPATH" = "$USER_HOME/$BASENAME"
+then
+    echo "Input Arguments:"
+    echo "    quiet [-q]: $quiet"
+else
+    if ( test -e "$USER_HOME/$BASENAME" ); then
+        rm $USER_HOME/$BASENAME
+    fi
+    cp $SCRIPTPATH $USER_HOME/$BASENAME
+    #chown -R $USER $USER_HOME/$BASENAME
+    if [ "$quiet" -eq "0" ]; 
+    then
+        /bin/bash $USER_HOME/$BASENAME
+    else
+        /bin/bash $USER_HOME/$BASENAME -q
+    fi
+    exit
 fi
 
 if [ "$quiet" -eq "0" ]; 
