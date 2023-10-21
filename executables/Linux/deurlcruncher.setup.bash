@@ -13,17 +13,6 @@ MODEL_RELEASE=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tag
 #   $PWD = \home\[username]\Desota\Desota_Models\DeUrlCruncher\executables\Linux
 MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
 
-# SUPER USER RIGHTS
-[ "$UID" -eq 0 ] || { 
-    echo "This script must be run as root."; 
-    echo "Usage:"; 
-    echo "sudo $0 [-s] [-d] [-h]";
-    echo "    -s = Start Service";
-    echo "    -d = Echo everything (debug)";
-    echo "    -h = Help";
-    echo "    [] = Optional";
-    exit 1;
-}
 
 
 # Program Installers
