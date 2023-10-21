@@ -14,7 +14,6 @@ MODEL_RELEASE=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tag
 MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
 
 
-
 # Program Installers
 #   - Miniconda
 architecture=$(uname -m)
@@ -37,7 +36,7 @@ do
         d) debug=1;;
         h) { 
             echo "Usage:"; 
-            echo "sudo $0 [-s] [-d] [-h]";
+            echo "$0 [-s] [-d] [-h]";
             echo "    -s = Start Service";
             echo "    -d = Echo everything (debug)";
             echo "    -h = Help";
@@ -46,7 +45,7 @@ do
         };;
         ?) {
             echo "Usage:"; 
-            echo "sudo $0 [-s] [-d] [-h]";
+            echo "$0 [-s] [-d] [-h]";
             echo "    -s = Start Service";
             echo "    -d = Echo everything (debug)";
             echo "    -h = Help";
@@ -74,6 +73,7 @@ else
     exit
 fi
 
+echo
 echo "Step 2/3 - Install Miniconda for Project"
 # Install Conda if Required - https://developers.google.com/earth-engine/guides/python_install-conda#linux
 # Miniconda Instalation Status
@@ -134,7 +134,7 @@ else
     conda create --prefix $MODEL_PATH/env -y&> /dev/null
     conda activate $MODEL_PATH/env&> /dev/null
 fi
-echo $CONDA_PREFIX
+echo "    $CONDA_PREFIX"
 
 # Install required Libraries
 echo
@@ -152,6 +152,8 @@ then
     echo 'Packages Installed:'
     pip freeze
 fi
+conda deactivate
+chown -R $USER $MODEL_PATH/env
 
 echo
 echo
