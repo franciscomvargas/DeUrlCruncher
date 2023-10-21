@@ -14,6 +14,8 @@ for %%a in ("%~dp0..\..\..\..\..") do set "root_path=%%~fa"
 set SCRIPTPATH=%~dpnx0
 for %%F in ("%SCRIPTPATH%") do set BASENAME=%%~nxF
 
+:: - Model Path
+set model_path_base=Desota\Desota_Models\%model_name%
 :: - NSSM Path
 
 :: -- Edit bellow if you're felling lucky ;) -- https://youtu.be/5NV6Rdv1a3I
@@ -74,7 +76,7 @@ exit
 set root_path=%UserProfile%
 :TEST_PASSED
 :: - Model Path
-set model_path=%root_path%\Desota\Desota_Models\%model_name%
+set model_path=%root_path%\%model_path_base%
 
 
 :: Copy File from future  deleted folder

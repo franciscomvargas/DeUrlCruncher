@@ -13,7 +13,7 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 
     [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=windows)](https://github.com/DeSOTAai/DeManagerTools/releases/download/v0.0.2/dmt_installer-v0.0.2-win64.zip)
     
-    [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=linux)](https://github.com/DeSOTAai/DeManagerTools#instalation)
+    <!-- [![Install DeManagerTools](https://img.shields.io/static/v1?label=Desota%20-%20Manager%20Tools&message=Install&color=blue&logo=linux)](https://github.com/DeSOTAai/DeManagerTools#instalation) -->
 
 2. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-desota-models-and-tools) tab
 
