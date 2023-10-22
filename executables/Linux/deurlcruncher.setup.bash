@@ -1,18 +1,43 @@
 #!/bin/bash
+
+# GET USER PATH
 get_user=$(who)
 USER=${get_user%% *}
 USER_HOME="/home/$USER"
 
-# Setup VARS
+
+# -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe: miniconda + pip pckgs + python cli script
+
+# SETUP VARS
 MODEL_NAME=DeUrlCruncher
 # - Model Release
 MODEL_RELEASE=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip
-
-
 # - Model Path
 #   $PWD = \home\[username]\Desota\Desota_Models\DeUrlCruncher\executables\Linux
 MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
+# Conda Instalation
+MODEL_ENV=$MODEL_PATH/env
+PIP_REQS=$MODEL_PATH/requirements.txt
 
+
+
+# -- Edit bellow if you're felling lucky ;) -- https://youtu.be/5NV6Rdv1a3I
+
+# SUPER USER RIGHTS
+[ "$UID" -eq 0 ] || { 
+    echo "Please consider running this script with root, miniconda can require it!"; 
+    echo "Usage:"; 
+    echo "sudo $0 [-q] [-h]";
+    while true; do
+        echo
+        read -p " # Continue as user? [y|n]: " iknowhatamidoing
+        case $iknowhatamidoing in
+            [Yy]* ) break;;
+            [Nn]* ) exit 1;;
+            * ) echo "    Please answer yes or no.";;
+        esac
+    done
+}
 
 # Program Installers
 #   - Miniconda
@@ -29,14 +54,14 @@ esac
 # IPUT ARGS - -s="Start Model Service"; -d="Print stuff and Pause at end"
 startmodel=0
 debug=0
-while getopts sde: flag
+while getopts sdhe: flag
 do
     case $flag in
         s) startmodel=1;;
         d) debug=1;;
         h) { 
             echo "Usage:"; 
-            echo "$0 [-s] [-d] [-h]";
+            echo "sudo $0 [-s] [-d] [-h]";
             echo "    -s = Start Service";
             echo "    -d = Echo everything (debug)";
             echo "    -h = Help";
@@ -45,7 +70,7 @@ do
         };;
         ?) {
             echo "Usage:"; 
-            echo "$0 [-s] [-d] [-h]";
+            echo "sudo $0 [-s] [-d] [-h]";
             echo "    -s = Start Service";
             echo "    -d = Echo everything (debug)";
             echo "    -h = Help";
@@ -59,7 +84,8 @@ echo "    startmodel [-s]: $startmodel"
 echo "    debug [-d]: $debug"
 
 # Move to Project Folder
-if ( test -d "$MODEL_PATH" ); then
+if ( test -d "$MODEL_PATH" ); 
+then
     cd $MODEL_PATH
     echo
     echo "Step 1/3 - Move (cd) to Project Path:"
@@ -67,13 +93,17 @@ if ( test -d "$MODEL_PATH" ); then
 else
     echo "Error:"
     echo "# Description: Model not installed correctly"
-    echo "    expected_path = $MODEL_PATH"
-    echo ">DEV TIP< Download Release with this command:"
+    echo "    expected_path = $MODEL_PATH"    
+    echo "DEV TIP:"
+    echo "# Download Release with this command:"
     echo "    rm -rf ~/Desota/Desota_Models/DeUrlCruncher && mkdir -p ~/Desota/Desota_Models/DeUrlCruncher && wget https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip -O ~/DeUrlCruncher_release.zip && bsdtar -xzvf ~/DeUrlCruncher_release.zip -C ~/Desota/Desota_Models/DeUrlCruncher --strip-components=1 && rm -rf ~/DeUrlCruncher_release.zip"
     exit
 fi
 
+# Install Conda IF Required
 echo
+
+
 echo "Step 2/3 - Install Miniconda for Project"
 # Install Conda if Required - https://developers.google.com/earth-engine/guides/python_install-conda#linux
 # Miniconda Instalation Status
@@ -94,72 +124,64 @@ else
     # Install Miniconda quietly, accepting defaults, to your Home directory.
     bash $USER_HOME/miniconda.sh -b -u -p $USER_HOME/Desota/Portables/miniconda3 > /dev/null
     chown -R $USER $USER_HOME/Desota/Portables
-    chown -R $USER $USER_HOME/Desota/Portables/miniconda3
-    # Remove the Miniconda installer from your Home directory.
+        # Remove the Miniconda installer from your Home directory.
     rm -rf $USER_HOME/miniconda.sh
     # Add Miniconda to PATH variable
     chmod 666 $USER_HOME/.bashrc
-    _exoport_PATH=$USER_HOME/Desota/Portables/miniconda3/bin
-    printf '\n# >>> conda initialize >>>\n'>> $USER_HOME/.bashrc
-    printf '# !! Contents within this block are managed by "desota setup" !!\n'>> $USER_HOME/.bashrc
-    printf '__conda_setup="$('>> $USER_HOME/.bashrc
-    printf "'%s/Desota/Portables/miniconda3/bin/conda' " $USER_HOME>> $USER_HOME/.bashrc
-    printf "'shell.bash' 'hook' 2> /dev/null)">> $USER_HOME/.bashrc
-    printf '"\n'>> $USER_HOME/.bashrc
-    printf 'if [ $? -eq 0 ]; then\n'>> $USER_HOME/.bashrc
-    printf '    eval "$__conda_setup"\n' >> $USER_HOME/.bashrc
-    printf 'else\n'>> $USER_HOME/.bashrc
-    printf '    if [ -f "%s/etc/profile.d/conda.sh" ]; then\n' $CONDA_BASE>> $USER_HOME/.bashrc
-    printf '        . "%s/etc/profile.d/conda.sh"\n' $CONDA_BASE>> $USER_HOME/.bashrc
-    printf '    else\n'>> $USER_HOME/.bashrc
-    printf '        %s\n' $_exoport_PATH>> $USER_HOME/.bashrc
-    printf '    fi\n'>> $USER_HOME/.bashrc
-    printf 'fi\n'>> $USER_HOME/.bashrc
-    printf 'unset __conda_setup\n'>> $USER_HOME/.bashrc
-    printf '# <<< conda initialize <<<\n'>> $USER_HOME/.bashrc
-    eval_cmd=$(cat $USER_HOME/.bashrc | tail -n +16)
+    _tmp_conda_PATH=$USER_HOME/Desota/Portables/miniconda3/bin/conda
+    
+    $_tmp_conda_PATH init bash
+    runuser -l $USER -c "$_tmp_conda_PATH init bash" 
+    
+    eval_cmd=$(cat ~/.bashrc | tail -n +16)
     eval "$eval_cmd"
 
     # Dont start shell in (base)
     conda config --set auto_activate_base false
 fi
 
+
 # Create/Activate Conda Virtual Environment
 echo "Creating MiniConda Environment..."
 if [ "$debug" -eq "1" ]; 
 then
-    conda create --prefix $MODEL_PATH/env -y
-    conda activate $MODEL_PATH/env
+    conda create --prefix $MODEL_ENV -y
+    conda activate $MODEL_ENV
 else
-    conda create --prefix $MODEL_PATH/env -y&> /dev/null
-    conda activate $MODEL_PATH/env&> /dev/null
+    conda create --prefix $MODEL_ENV -y&> /dev/null
+    conda activate $MODEL_ENV&> /dev/null
 fi
 echo "    $CONDA_PREFIX"
+
 
 # Install required Libraries
 echo
 echo "Step 3/3 - Install Project Packages"
+export TMPDIR='/var/tmp'
 if [ "$debug" -eq "1" ]; 
 then
     conda install pip -y
-    pip install -r $MODEL_PATH/requirements.txt
+    pip install -r $PIP_REQS --compile --no-cache-dir 2>/dev/null
 fi
 if [ "$debug" -ne "1" ]; 
 then
     conda install pip -y &> /dev/null
-    pip install -r $MODEL_PATH/requirements.txt &> /dev/null
+    pip install -r $PIP_REQS --compile --no-cache-dir &> /dev/null
     echo
     echo 'Packages Installed:'
     pip freeze
 fi
+# Delete pip tmp files
+rm -rf /var/tmp/pip-*&> /dev/null
+# Deactivate CONDA
 conda deactivate
-chown -R $USER $MODEL_PATH/env
+chown -R $USER $MODEL_ENV
 
 echo
 echo
 echo 'Setup Completed!'
 if [ "$startmodel" -eq "1" ]; 
 then
-    $MODEL_PATH/env/bin/python3 $MODEL_PATH/main.py
+    $MODEL_ENV/bin/python3 $MODEL_PATH/main.py --noclear
 fi
 exit
