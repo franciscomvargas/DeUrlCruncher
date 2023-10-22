@@ -6,7 +6,7 @@ USER=${get_user%% *}
 USER_HOME="/home/$USER"
 
 
-# -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe: miniconda + pip pckgs + python cli script
+# -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
 
 # SETUP VARS
 MODEL_NAME=DeUrlCruncher
@@ -18,6 +18,7 @@ MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
 # Conda Instalation
 MODEL_ENV=$MODEL_PATH/env
 PIP_REQS=$MODEL_PATH/requirements.txt
+PYTHON_MAIN="$MODEL_PATH/main.py  --noclear"
 
 
 
@@ -182,6 +183,6 @@ echo
 echo 'Setup Completed!'
 if [ "$startmodel" -eq "1" ]; 
 then
-    $MODEL_ENV/bin/python3 $MODEL_PATH/main.py --noclear
+    $MODEL_ENV/bin/python3 $PYTHON_MAIN
 fi
 exit

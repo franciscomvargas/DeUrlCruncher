@@ -7,12 +7,13 @@ USER_HOME="/home/$USER"
 
 
 
-# -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe: miniconda + pip pckgs + python cli script
+# -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
 
 # Setup VARS
 MODEL_NAME=DeUrlCruncher
 # - Model Path
 MODEL_PATH=$USER_HOME/Desota/Desota_Models/$MODEL_NAME
+
 # - Conda Environment
 MODEL_ENV=$MODEL_PATH/env
 CONDA_PATH=$USER_HOME/Desota/Portables/miniconda3/bin/conda
@@ -114,6 +115,8 @@ if ( test -d "$MODEL_PATH" ); then
     echo ">DEV TIP< Delete this folder:"
     echo "    $MODEL_PATH"
 else
+    echo
+    echo
     echo 'Uninstalation Completed!'
 fi
 

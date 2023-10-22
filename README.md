@@ -125,7 +125,7 @@ rm -rf ~/DeUrlCruncher_release.zip
 
 5. Setup:
 ```cmd
-bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash
+sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash
 
 ```
 
@@ -142,12 +142,12 @@ bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.
             <tr>
                 <td>-d</td>
                 <td>Setup with debug Echo ON</td>
-                <td><code>bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -d</code></td>
+                <td><code>sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -d</code></td>
             </tr>
             <tr>
                 <td>-s</td>
                 <td>Start Model at end of setup</td>
-                <td><code>bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -s</code></td>
+                <td><code>sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -s</code></td>
             </tr>
         </tbody>
     </table>
@@ -302,7 +302,7 @@ bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.
     * <kbd> Ctrl </kbd> + <kbd> Alt </kbd> + <kbd>T</kbd>
 
 ```cmd
-bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash
+sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash
 
 ```
 
@@ -310,7 +310,7 @@ bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninst
 
     |arg|Description|Example
     |---|---|---|
-    |-q|Uninstall without requiring user interaction|`bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash -q`
+    |-q|Uninstall without requiring user interaction|`sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.uninstall.bash -q`
       
 </details>
 

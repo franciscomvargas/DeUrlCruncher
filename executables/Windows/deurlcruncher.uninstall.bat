@@ -1,22 +1,24 @@
 @ECHO OFF
-:: Uninstalation VARS
-set model_name=DeUrlCruncher
-set uninstaller_header=DeUrlCruncher Uninstaller - Sad to say goodbye ):
 
-:: - User Path
-:: %~dp0 = C:\users\[user]\Desota\Desota_Models\DeScraper\executables\Windows
+:: -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
+
+:: USER PATH
+:: %~dp0 = C:\users\[user]\Desota\Desota_Models\DeUrlCruncher\executables\Windows
+for %%a in ("%~dp0..\..\..\..\..") do set "user_path=%%~fa"
 for %%a in ("%~dp0\..\..\..\..\..\..") do set "test_path=%%~fa"
 for %%a in ("%UserProfile%\..") do set "test1_path=%%~fa"
-for %%a in ("%~dp0..\..\..\..\..") do set "root_path=%%~fa"
 
-:: - Current Path
-:: %~dp0 = C:\Users\[username]Desota\Desota_Models\DeUrlCruncher\executables\windows
-set SCRIPTPATH=%~dpnx0
-for %%F in ("%SCRIPTPATH%") do set BASENAME=%%~nxF
+:: Model VARS
+set model_name=DeUrlCruncher
+set model_path_basepath=Desota\Desota_Models\%model_name%
+set uninstaller_header=%model_name% Uninstaller - Sad to say goodbye ):
 
-:: - Model Path
-set model_path_base=Desota\Desota_Models\%model_name%
-:: - NSSM Path
+:: - Miniconda (virtual environment) Vars
+set conda_basepath=Desota\Portables\miniconda3\condabin\conda.bat
+set model_env_basepath=%model_path_basepath%\env
+
+
+
 
 :: -- Edit bellow if you're felling lucky ;) -- https://youtu.be/5NV6Rdv1a3I
 
@@ -31,8 +33,6 @@ IF %1 EQU %arg1% (
 :noarg1
 SET arg1_bool=0
 :yeasarg1
-
-
 
 :: - .bat ANSI Colored CLI
 set header=
@@ -58,8 +58,6 @@ set ansi_end=%ESC%[0m
 
 ECHO %header%%uninstaller_header%%ansi_end%
 ECHO    model name  : %model_name%
-
-:: TEST PATH
 IF "%test_path%" EQU "C:\Users" GOTO TEST_PASSED
 IF "%test_path%" EQU "C:\users" GOTO TEST_PASSED
 IF "%test_path%" EQU "c:\Users" GOTO TEST_PASSED
@@ -73,38 +71,56 @@ ECHO %fail%DEV TIP: Run Command Without Admin Rights!%ansi_end%
 PAUSE
 exit
 :TEST1_PASSED
-set root_path=%UserProfile%
+set user_path=%UserProfile%
 :TEST_PASSED
-:: - Model Path
-set model_path=%root_path%\%model_path_base%
+:: Model VARS
+set model_path=%user_path%\%model_path_basepath%
+:: - Miniconda (virtual environment) Vars
+set conda_path=%user_path%\%conda_basepath%
+set model_env=%user_path%\%model_env_basepath%
 
 
 :: Copy File from future  deleted folder
-IF "%SCRIPTPATH%" NEQ "%root_path%\%BASENAME%" (
-    del %root_path%\%BASENAME% >NUL 2>NUL
-    copy %SCRIPTPATH% %root_path%\%BASENAME%
+:: - Current Path
+:: %~dp0 = C:\Users\[username]Desota\Desota_Models\DeUrlCruncher\executables\windows
+set SCRIPTPATH=%~dpnx0
+for %%F in ("%SCRIPTPATH%") do set BASENAME=%%~nxF
+IF "%SCRIPTPATH%" NEQ "%user_path%\%BASENAME%" (
+    del %user_path%\%BASENAME% >NUL 2>NUL
+    copy %SCRIPTPATH% %user_path%\%BASENAME%
     IF %arg1_bool% EQU 1 (
-        start %root_path%\%BASENAME% /Q
+        start %user_path%\%BASENAME% /Q
     ) ELSE (
-        start %root_path%\%BASENAME%
+        start %user_path%\%BASENAME%
     )
     exit
 )
 
 IF %arg1_bool% EQU 1 (
+    :: QUIET UNISTALL
+
+    :: Delete pip pckgs
+    ECHO %info_h1%Deleting pip packages%ansi_end%
+    ECHO The packages from the following environment will be REMOVED:
+    ECHO     Package Plan: %model_env%
+    call %conda_path% remove --prefix %model_env% --all --force -y>NUL 2>NUL
+
     :: Delete Project Folder
 	ECHO %info_h1%Deleting Project Folder%ansi_end%
     IF EXIST %model_path% rmdir /S /Q %model_path% >NUL 2>NUL
     GOTO EOF_UN
 )
 
-:noargs
+:: USER UNINSTALL
+
+:: Delete pip pckgs
+ECHO %info_h1%Deleting pip packages%ansi_end%
+call %conda_path% remove --prefix %model_env% --all --force 
+
 :: Delete Project Folder
-IF EXIST %model_path% (
-	ECHO %info_h1%Deleting Project Folder%ansi_end%
-    rmdir /S %model_path%
-    GOTO EOF_UN
-)
+ECHO %info_h1%Deleting Project Folder%ansi_end%
+IF EXIST %model_path% rmdir /S %model_path%
+
 
 :EOF_UN
 :: Inform Uninstall Completed
@@ -116,6 +132,6 @@ IF EXIST %model_path% (
     timeout 1 >NUL 2>NUL
 )
 IF %arg1_bool% EQU 1 (
-    del %root_path%\%BASENAME% >NUL 2>NUL && exit
+    del %user_path%\%BASENAME% >NUL 2>NUL && exit
 )
-del %root_path%\%BASENAME% >NUL 2>NUL && PAUSE && exit
+del %user_path%\%BASENAME% >NUL 2>NUL && PAUSE && exit

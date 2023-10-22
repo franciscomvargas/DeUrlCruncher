@@ -1,13 +1,26 @@
 @ECHO OFF
-:: Instalation VARS
-set model_name=DeUrlCruncher
-:: - Model GIT
-set model_release=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip
-:: - Model Path
+
+:: -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
+
+:: USER PATH
 :: %~dp0 = C:\Users\[username]Desota\Desota_Models\DeUrlCruncher\executables\windows
 for %%a in ("%~dp0\..\..\..\..\..") do set "user_path=%%~fa"
 for %%a in ("%~dp0\..\..\..\..\..\..") do set "test_path=%%~fa"
 for %%a in ("%UserProfile%\..") do set "test1_path=%%~fa"
+
+:: Model VARS
+set model_name=DeUrlCruncher
+set model_path_basepath=Desota\Desota_Models\%model_name%
+set python_main_basepath=%model_path_basepath%\main.py
+
+:: - Model GIT
+set model_release=https://github.com/franciscomvargas/deurlcruncher/archive/refs/tags/v0.0.0.zip
+
+:: - Miniconda (virtual environment) Vars
+set conda_basepath=\Desota\Portables\miniconda3\condabin\conda.bat
+set model_env_basepath=%model_path_basepath%\env
+set pip_reqs_basepath=%model_path_basepath%\requirements.txt
+
 
 
 :: -- Edit bellow if you're felling lucky ;) -- https://youtu.be/5NV6Rdv1a3I
@@ -73,7 +86,8 @@ set ansi_end=%ESC%[0m
 
 ECHO %header%Welcome to %model_name% Setup!%ansi_end%
 
-:: TEST PATH
+:: GET USER PATH
+
 IF "%test_path%" EQU "C:\Users" GOTO TEST_PASSED
 IF "%test_path%" EQU "C:\users" GOTO TEST_PASSED
 IF "%test_path%" EQU "c:\Users" GOTO TEST_PASSED
@@ -89,14 +103,20 @@ exit
 :TEST1_PASSED
 set user_path=%UserProfile%
 :TEST_PASSED
-set model_path=%user_path%\Desota\Desota_Models\%model_name%
+:: Model VARS
+set model_path=%user_path%\%model_path_basepath%
+set python_main=%user_path%\%python_main_basepath%
+:: Miniconda (virtual environment) Vars
+set conda_path=%user_path%\%conda_basepath%
+set model_env=%user_path%\%model_env_basepath%
+set pip_reqs=%user_path%\%pip_reqs_basepath%
 
 :: Model Folder
 :: DEV TIP: call powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" &&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 && del %user_path%\%model_name%_release.zip
 IF NOT EXIST %model_path% (
     ECHO %fail%Error: Model not installed correctly %ansi_end%
     ECHO %fail1%[ CMD TIP ] Download Release with this command:%ansi_end%
-    ECHO     IF EXIST %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^( rmdir /S /Q %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^) ELSE ^( ECHO New Install! ^) ^&^& mkdir %UserProfile%\Desota\Desota_Models\DeUrlCruncher ^&^& powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" ^&^&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%\%model_name%_release.zip
+    ECHO     IF EXIST %model_path% ^( rmdir /S /Q %model_path% ^) ELSE ^( ECHO New Install! ^) ^&^& mkdir %model_path% ^&^& powershell -command "Invoke-WebRequest -Uri %model_release% -OutFile %user_path%\%model_name%_release.zip" ^&^&  tar -xzvf %user_path%\%model_name%_release.zip -C %model_path% --strip-components 1 ^&^& del %user_path%\%model_name%_release.zip
     ECHO  %ESC%P
     PAUSE
     exit
@@ -109,32 +129,24 @@ call cd %model_path% >NUL 2>NUL
 :: Install Conda Required
 ECHO %info_h1%Step 2/3 - Install Miniconda for Project%ansi_end%
 call mkdir %user_path%\Desota\Portables >NUL 2>NUL
-IF NOT EXIST %user_path%\Desota\Portables\miniconda3\condabin\conda.bat goto installminiconda
+IF NOT EXIST %conda_path% goto installminiconda
 goto skipinstallminiconda
 :installminiconda
-IF %PROCESSOR_ARCHITECTURE%==AMD64 powershell -command "Invoke-WebRequest -Uri %miniconda64% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%user_path%\Desota\Portables\miniconda3 && del %user_path%\\miniconda_installer.exe && goto skipinstallminiconda
-IF %PROCESSOR_ARCHITECTURE%==x86 powershell -command "Invoke-WebRequest -Uri %miniconda32% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%model_path%Desota\Portables\miniconda3 && del %user_path%\\miniconda_installer.exe && && goto skipinstallminiconda
+IF %PROCESSOR_ARCHITECTURE%==AMD64 powershell -command "Invoke-WebRequest -Uri %miniconda64% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%user_path%\Desota\Portables\miniconda3 && del %user_path%\miniconda_installer.exe && goto skipinstallminiconda
+IF %PROCESSOR_ARCHITECTURE%==x86 powershell -command "Invoke-WebRequest -Uri %miniconda32% -OutFile %user_path%\miniconda_installer.exe" && start /B /WAIT %user_path%\miniconda_installer.exe /InstallationType=JustMe /AddToPath=0 /RegisterPython=0 /S /D=%user_path%\Desota\Portables\miniconda3 && del %user_path%\miniconda_installer.exe && && goto skipinstallminiconda
 :skipinstallminiconda
-
-:: SET Miniconda PATH
-ECHO %info_h2%Creating Model Dedicated MiniConda Path...%ansi_end% 
-set conda_path=%user_path%\Desota\Portables\miniconda3\condabin\conda_%model_name%.bat
-IF EXIST %conda_path% (
-    call del %conda_path%
-)
-call copy %user_path%\Desota\Portables\miniconda3\condabin\conda.bat %conda_path%
 
 :: Create/Activate Conda Virtual Environment
 ECHO %info_h2%Creating MiniConda Environment...%ansi_end% 
 IF %arg2_bool% EQU 1 (
-    call %conda_path% create --prefix ./env python=3.11 -y
+    call %conda_path% create --prefix %model_env% python=3.11 -y
 ) ELSE (
-    call %conda_path% create --prefix ./env python=3.11 -y >NUL 2>NUL
+    call %conda_path% create --prefix %model_env% python=3.11 -y >NUL 2>NUL
 )
 IF %arg2_bool% EQU 1 (
-    call %conda_path% activate ./env
+    call %conda_path% activate %model_env%
 ) ELSE (
-    call %conda_path% activate ./env >NUL 2>NUL
+    call %conda_path% activate %model_env% >NUL 2>NUL
 )
 IF %arg2_bool% EQU 1 (
     call %conda_path% install pip -y
@@ -147,9 +159,9 @@ IF %arg2_bool% EQU 1 (
 :: Install required Libraries
 ECHO %info_h1%Step 3/3 - Install Project Packages%ansi_end%
 IF %arg2_bool% EQU 1 (
-    call pip install -r requirements.txt
+    call pip install -r %pip_reqs%
 ) ELSE (
-    call pip install -r requirements.txt >NUL 2>NUL
+    call pip install -r %pip_reqs% >NUL 2>NUL
     call pip freeze
 )
 
@@ -160,7 +172,7 @@ call %conda_path% deactivate >NUL 2>NUL
 
 :: Start Runner Service?
 IF %arg1_bool% EQU 0 GOTO NOSTART
-start %model_path%\env\python %model_path%\main.py
+start %model_env%\python %python_main%
 ECHO %sucess%Instalation Completed!%ansi_end%
 ECHO %info_h2%model name  : %model_name%%ansi_end%
 :: PAUSE FOR DEBUG
