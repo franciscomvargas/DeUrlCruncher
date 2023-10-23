@@ -1,5 +1,24 @@
 @ECHO OFF
 
+:: GET ADMIN > BEGIN
+net session >NUL 2>NUL
+IF %errorLevel% NEQ 0 (
+	goto UACPrompt
+) ELSE (
+	goto gotAdmin
+)
+:UACPrompt
+ECHO Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+set params= %*
+ECHO UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+cscript "%temp%\getadmin.vbs"
+del "%temp%\getadmin.vbs"
+exit /B
+:gotAdmin
+:: GET ADMIN > END
+
+
+
 :: -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
 
 :: USER PATH
@@ -12,6 +31,9 @@ for %%a in ("%UserProfile%\..") do set "test1_path=%%~fa"
 set model_name=DeUrlCruncher
 set model_path_basepath=Desota\Desota_Models\%model_name%
 set uninstaller_header=%model_name% Uninstaller - Sad to say goodbye ):
+set model_execs_basepath=%model_path_basepath%\executables\Windows
+set req_uninstall_path=%model_execs_basepath%\descraper.uninstall.bat
+
 
 :: - Miniconda (virtual environment) Vars
 set conda_basepath=Desota\Portables\miniconda3\condabin\conda.bat
@@ -24,15 +46,34 @@ set model_env_basepath=%model_path_basepath%\env
 
 :: IPUT ARGS - /Q=Quietly
 SET arg1=/Q
+SET arg2=/TMP
 :: Start Runner Service?
 IF "%1" EQU "" GOTO noarg1
 IF %1 EQU %arg1% (
     SET arg1_bool=1
     GOTO yeasarg1
 )
+IF "%2" EQU "" GOTO noarg1
+IF %2 EQU %arg1% (
+    SET arg1_bool=1
+    GOTO yeasarg1
+)
 :noarg1
 SET arg1_bool=0
 :yeasarg1
+IF "%1" EQU "" GOTO noarg2
+IF %1 EQU %arg2% (
+    SET arg2_bool=1
+    GOTO yeasarg2
+)
+IF "%2" EQU "" GOTO noarg2
+IF %2 EQU %arg2% (
+    SET arg2_bool=1
+    GOTO yeasarg2
+)
+:noarg2
+SET arg2_bool=0
+:yeasarg2
 
 :: - .bat ANSI Colored CLI
 set header=
@@ -75,55 +116,52 @@ set user_path=%UserProfile%
 :TEST_PASSED
 :: Model VARS
 set model_path=%user_path%\%model_path_basepath%
+set req_uninstall_path=%user_path%\%req_uninstall_path%
 :: - Miniconda (virtual environment) Vars
 set conda_path=%user_path%\%conda_basepath%
 set model_env=%user_path%\%model_env_basepath%
 
 
-:: Copy File from future  deleted folder
-:: - Current Path
-:: %~dp0 = C:\Users\[username]Desota\Desota_Models\DeUrlCruncher\executables\windows
-set SCRIPTPATH=%~dpnx0
-for %%F in ("%SCRIPTPATH%") do set BASENAME=%%~nxF
-IF "%SCRIPTPATH%" NEQ "%user_path%\%BASENAME%" (
+:: Copy File from future deleted folder
+for %%F in ("%req_uninstall_path%") do set BASENAME=%%~nxF
+IF %arg2_bool% EQU 0 (
     del %user_path%\%BASENAME% >NUL 2>NUL
-    copy %SCRIPTPATH% %user_path%\%BASENAME%
+    copy %req_uninstall_path% %user_path%\%BASENAME%
     IF %arg1_bool% EQU 1 (
-        start %user_path%\%BASENAME% /Q
+        start %user_path%\%BASENAME% /Q /TMP
     ) ELSE (
-        start %user_path%\%BASENAME%
+        start %user_path%\%BASENAME% /TMP
     )
     exit
 )
+IF %arg1_bool% EQU 0 GOTO noisy_uninstall
 
-IF %arg1_bool% EQU 1 (
-    :: QUIET UNISTALL
+:: QUIET UNISTALL
 
-    :: Delete pip pckgs
-    ECHO %info_h1%Deleting pip packages%ansi_end%
-    ECHO The packages from the following environment will be REMOVED:
-    ECHO     Package Plan: %model_env%
-    call %conda_path% remove --prefix %model_env% --all --force -y>NUL 2>NUL
+:: Delete pip pckgs
+ECHO %info_h1%Deleting pip packages%ansi_end%
+ECHO The packages from the following environment will be REMOVED:
+ECHO     Package Plan: %model_env%
+call %conda_path% remove --prefix %model_env% --all --force -y>NUL 2>NUL
+:: Delete Project Folder
+ECHO %info_h1%Deleting Project Folder%ansi_end%
+IF EXIST %model_path% rmdir /S /Q %model_path% >NUL 2>NUL
+GOTO EOF_UN
 
-    :: Delete Project Folder
-	ECHO %info_h1%Deleting Project Folder%ansi_end%
-    IF EXIST %model_path% rmdir /S /Q %model_path% >NUL 2>NUL
-    GOTO EOF_UN
-)
 
 :: USER UNINSTALL
+:noisy_uninstall
 
 :: Delete pip pckgs
 ECHO %info_h1%Deleting pip packages%ansi_end%
 call %conda_path% remove --prefix %model_env% --all --force 
-
 :: Delete Project Folder
 ECHO %info_h1%Deleting Project Folder%ansi_end%
 IF EXIST %model_path% rmdir /S %model_path%
 
 
-:EOF_UN
 :: Inform Uninstall Completed
+:EOF_UN
 IF EXIST %model_path% (
     ECHO %fail%%model_name% Uninstall Fail%ansi_end%
     PAUSE

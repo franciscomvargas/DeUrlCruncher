@@ -1,5 +1,24 @@
 @ECHO OFF
 
+:: GET ADMIN > BEGIN
+net session >NUL 2>NUL
+IF %errorLevel% NEQ 0 (
+	goto UACPrompt
+) ELSE (
+	goto gotAdmin
+)
+:UACPrompt
+ECHO Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+set params= %*
+ECHO UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+cscript "%temp%\getadmin.vbs"
+del "%temp%\getadmin.vbs"
+exit /B
+:gotAdmin
+:: GET ADMIN > END
+
+
+
 :: -- Edit bellow vvvv DeSOTA DEVELOPER EXAMPLe (Python - Tool): miniconda + pip pckgs + python cli script
 
 :: USER PATH
@@ -29,8 +48,10 @@ set pip_reqs_basepath=%model_path_basepath%\requirements.txt
 set miniconda64=https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
 set miniconda32=https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86.exe
 
-:: IPUT ARGS - /startmodel="Start Model Service"
-SET arg1=/startmodel
+:: IPUT ARGS
+:: /manualstart :: Start Model Service Manually: %UserProfile%\Desota\Desota_Models\DeScraper\executables\Windows\descraper.start.bat
+SET arg1=/manualstart
+:: /debug :: Log everything and require USER interaction
 SET arg2=/debug
 :: Start Runner Service?
 IF "%1" EQU "" GOTO noarg1
@@ -138,22 +159,22 @@ IF %PROCESSOR_ARCHITECTURE%==x86 powershell -command "Invoke-WebRequest -Uri %mi
 
 :: Create/Activate Conda Virtual Environment
 ECHO %info_h2%Creating MiniConda Environment...%ansi_end% 
-IF %arg2_bool% EQU 1 (
-    call %conda_path% create --prefix %model_env% python=3.11 -y
-) ELSE (
-    call %conda_path% create --prefix %model_env% python=3.11 -y >NUL 2>NUL
-)
-IF %arg2_bool% EQU 1 (
-    call %conda_path% activate %model_env%
-) ELSE (
-    call %conda_path% activate %model_env% >NUL 2>NUL
-)
-IF %arg2_bool% EQU 1 (
-    call %conda_path% install pip -y
-) ELSE (
-    call %conda_path% install pip -y > NUL 2>NUL
-)
+IF %arg2_bool% EQU 1 GOTO noisy_conda
 
+:: QUIET SETUP
+
+call %conda_path% create --prefix %model_env% python=3.11 -y >NUL 2>NUL
+call %conda_path% activate %model_env% >NUL 2>NUL
+call %conda_path% install pip -y > NUL 2>NUL
+GOTO eo_conda
+
+:: USER SETUP
+:noisy_conda
+call %conda_path% create --prefix %model_env% python=3.11 -y
+call %conda_path% activate %model_env%
+call %conda_path% install pip -y
+
+:eo_conda
 
 
 :: Install required Libraries

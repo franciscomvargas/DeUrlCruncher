@@ -17,7 +17,7 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 
 2. **Open** [`Models Instalation`](https://github.com/DeSOTAai/DeManagerTools/#install--upgrade-desota-models-and-tools) tab
 
-3. **Select** the Available Tool `franciscomvargas\deurlcruncher`
+3. **Select** the Available Tool `franciscomvargas/deurlcruncher`
 
 4. **Press** `Start Instalation`
 
@@ -27,6 +27,7 @@ https://github.com/franciscomvargas/DeUrlCruncher/assets/87917356/6fca9cc3-2320-
 * Go to CMD (command prompt):
     * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
     * Search: `cmd` 
+    * <kbd>↵ Enter</kbd>
 
 
 1. Create Model Folder:
@@ -79,8 +80,8 @@ del %UserProfile%\DeUrlCruncher_release.zip
                 <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /debug</code></td>
             </tr>
             <tr>
-                <td>/startmodel</td>
-                <td>Start Model at end of setup</td>
+                <td>/manualstart</td>
+                <td>Don't start at end of setup</td>
                 <td><code>%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.setup.bat /startmodel</code></td>
             </tr>
         </tbody>
@@ -145,8 +146,8 @@ sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.s
                 <td><code>sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -d</code></td>
             </tr>
             <tr>
-                <td>-s</td>
-                <td>Start Model at end of setup</td>
+                <td>-m</td>
+                <td>Don't start service at end of setup</td>
                 <td><code>sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.setup.bash -s</code></td>
             </tr>
         </tbody>
@@ -271,16 +272,17 @@ sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.s
 
 1. **Open** [`Models Dashboard`](https://github.com/DeSOTAai/DeManagerTools/#models--tools-dashboard) tab
 
-2. **Select** the model `franciscomvargas\deurlcruncher`
+2. **Select** the model `franciscomvargas/deurlcruncher`
 
 3. **Press** `Uninstall`
 
 <details>
     <summary><h2>Manual Windows Uninstalation</h2></summary>
 
-* Go to CMD (command prompt):
+* Go to CMD as Administrator (command prompt):
   * <kbd>⊞ Win</kbd> + <kbd>R</kbd>
   * Enter: `cmd` 
+  * <kbd>Ctrl</kbd> + <kbd>⇧ Shift</kbd> + <kbd>↵ Enter</kbd>
 
 ```cmd
 %UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.uninstall.bat
@@ -294,6 +296,8 @@ sudo bash ~/Desota/Desota_Models/DeUrlCruncher/executables/Linux/deurlcruncher.s
     |/Q|Uninstall without requiring user interaction|`%UserProfile%\Desota\Desota_Models\DeUrlCruncher\executables\Windows\deurlcruncher.uninstall.bat /Q`
       
 </details>
+
+
 
 <details>
     <summary><h2>Manual Linux Uninstalation</h2></summary>
