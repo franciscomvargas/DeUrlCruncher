@@ -32,7 +32,7 @@ set model_name=DeUrlCruncher
 set model_path_basepath=Desota\Desota_Models\%model_name%
 set uninstaller_header=%model_name% Uninstaller - Sad to say goodbye ):
 set model_execs_basepath=%model_path_basepath%\executables\Windows
-set req_uninstall_path=%model_execs_basepath%\descraper.uninstall.bat
+set req_uninstall_path=%model_execs_basepath%\deurlcruncher.uninstall.bat
 
 
 :: - Miniconda (virtual environment) Vars
