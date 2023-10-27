@@ -144,10 +144,12 @@ IF NOT EXIST %model_path% (
 )
 
 :: Move to Project Folder
+ECHO.
 ECHO %info_h1%Step 1/3 - Move (cd) to Project Path%ansi_end%
 call cd %model_path% >NUL 2>NUL
 
 :: Install Conda Required
+ECHO.
 ECHO %info_h1%Step 2/3 - Install Miniconda for Project%ansi_end%
 call mkdir %user_path%\Desota\Portables >NUL 2>NUL
 IF NOT EXIST %conda_path% goto installminiconda
@@ -178,11 +180,17 @@ call %conda_path% install pip -y
 
 
 :: Install required Libraries
+ECHO.
 ECHO %info_h1%Step 3/3 - Install Project Packages%ansi_end%
 IF %arg2_bool% EQU 1 (
-    call pip install -r %pip_reqs%
+    call pip install -r %pip_reqs% --compile --no-cache-dir
 ) ELSE (
-    call pip install -r %pip_reqs% >NUL 2>NUL
+    ECHO %info_h2%The following packages will be installed:%ansi_end%
+    call type %pip_reqs%
+    ECHO.
+    ECHO %info_h2%Instalation in progress...%ansi_end%
+    call pip install -r %pip_reqs% --compile --no-cache-dir >NUL 2>NUL
+    ECHO %info_h2%Instalation Completed:%ansi_end%
     call pip freeze
 )
 
@@ -192,7 +200,7 @@ call %conda_path% deactivate >NUL 2>NUL
 
 
 :: Start Runner Service?
-IF %arg1_bool% EQU 0 GOTO NOSTART
+IF %arg1_bool% EQU 1 GOTO NOSTART
 start %model_env%\python %python_main%
 ECHO %sucess%Instalation Completed!%ansi_end%
 ECHO %info_h2%model name  : %model_name%%ansi_end%

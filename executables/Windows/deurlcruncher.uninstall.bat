@@ -143,6 +143,7 @@ ECHO %info_h1%Deleting pip packages%ansi_end%
 ECHO The packages from the following environment will be REMOVED:
 ECHO     Package Plan: %model_env%
 call %conda_path% remove --prefix %model_env% --all --force -y>NUL 2>NUL
+call %conda_path% clean --yes --all --force 2>NUL
 :: Delete Project Folder
 ECHO %info_h1%Deleting Project Folder%ansi_end%
 IF EXIST %model_path% rmdir /S /Q %model_path% >NUL 2>NUL
@@ -155,6 +156,7 @@ GOTO EOF_UN
 :: Delete pip pckgs
 ECHO %info_h1%Deleting pip packages%ansi_end%
 call %conda_path% remove --prefix %model_env% --all --force 
+call %conda_path% clean --yes --all --force 2>NUL
 :: Delete Project Folder
 ECHO %info_h1%Deleting Project Folder%ansi_end%
 IF EXIST %model_path% rmdir /S %model_path%
