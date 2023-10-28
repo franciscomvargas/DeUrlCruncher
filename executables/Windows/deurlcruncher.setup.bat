@@ -53,7 +53,8 @@ set miniconda32=https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x8
 SET arg1=/manualstart
 :: /debug :: Log everything and require USER interaction
 SET arg2=/debug
-:: Start Runner Service?
+
+:: Parse arguments into variables
 IF "%1" EQU "" GOTO noarg1
 IF %1 EQU %arg1% (
     SET arg1_bool=1
@@ -67,7 +68,7 @@ IF %2 EQU %arg1% (
 :noarg1
 SET arg1_bool=0
 :yeasarg1
-:: DEBUG
+
 IF "%1" EQU "" GOTO noarg2
 IF %1 EQU %arg2% (
     SET arg2_bool=1
@@ -81,6 +82,7 @@ IF %2 EQU %arg2% (
 :noarg2
 SET arg2_bool=0
 :yeasarg2
+
 
 :: .BAT ANSI Colored CLI
 set header=
@@ -107,16 +109,18 @@ set ansi_end=%ESC%[0m
 
 ECHO %header%Welcome to %model_name% Setup!%ansi_end%
 
+
 :: GET USER PATH
+IF "%test1_path%" EQU "C:\Users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "C:\users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "c:\Users" GOTO TEST1_PASSED
+IF "%test1_path%" EQU "c:\users" GOTO TEST1_PASSED
 
 IF "%test_path%" EQU "C:\Users" GOTO TEST_PASSED
 IF "%test_path%" EQU "C:\users" GOTO TEST_PASSED
 IF "%test_path%" EQU "c:\Users" GOTO TEST_PASSED
 IF "%test_path%" EQU "c:\users" GOTO TEST_PASSED
-IF "%test1_path%" EQU "C:\Users" GOTO TEST1_PASSED
-IF "%test1_path%" EQU "C:\users" GOTO TEST1_PASSED
-IF "%test1_path%" EQU "c:\Users" GOTO TEST1_PASSED
-IF "%test1_path%" EQU "c:\users" GOTO TEST1_PASSED
+
 ECHO %fail%Error: Can't Resolve Request!%ansi_end%
 ECHO %fail%[ DEV TIP ] Run Command Without Admin Rights!%ansi_end%
 PAUSE
