@@ -40,6 +40,11 @@ PYTHON_MAIN="$MODEL_PATH/main.py  --noclear"
     done
 }
 
+# >>Libraries required<<
+echo "Step 0/4 - Check Required apt instalations"
+echo "    libarchive-tools"
+apt install libarchive-tools -y &>/dev/nul
+
 # Program Installers
 #   - Miniconda
 architecture=$(uname -m)
@@ -103,8 +108,6 @@ fi
 
 # Install Conda IF Required
 echo
-
-
 echo "Step 2/3 - Install Miniconda for Project"
 # Install Conda if Required - https://developers.google.com/earth-engine/guides/python_install-conda#linux
 # Miniconda Instalation Status

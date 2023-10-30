@@ -24,22 +24,26 @@ CONDA_PATH=$USER_HOME/Desota/Portables/miniconda3/bin/conda
 
 # IPUT ARGS: -q="Quiet uninstall"; -p="User Password"
 quiet=0
-while getopts qhe: flag
+automatic=0
+while getopts qahe: flag
 do
     case $flag in
         q)  quiet=1;;
+        a)  automatic=1;;
         h)  { 
             echo "Usage:"; 
-            echo "sudo $0 [-q] [-h]";
+            echo "sudo $0 [-q] [-a] [-h]";
             echo "    -q = Hands Free (quiet)";
+            echo "    -a = DeSOTA automatic Uninstall"
             echo "    -h = Help";
             echo "    [] = Optional";
             exit 1;
         };;
         ?)  { 
             echo "Usage:"; 
-            echo "sudo $0 [-q] [-h]";
+            echo "sudo $0 [-q] [-a] [-h]";
             echo "    -q = Hands Free (quiet)";
+            echo "    -a = DeSOTA automatic Uninstall"
             echo "    -h = Help";
             echo "    [] = Optional";
             exit 1;
@@ -50,12 +54,14 @@ done
 # Copy File from future  deleted folder
 SCRIPTPATH=$(realpath -s "$0")
 BASENAME=$(basename $SCRIPTPATH)
-if test "$SCRIPTPATH" = "$USER_HOME/$BASENAME"
+if [ "$SCRIPTPATH" = "$USER_HOME/$BASENAME" ] || [ "$automatic" -eq "1" ];
 then
     echo "Input Arguments:"
     echo "    quiet [-q]: $quiet"
-else
-
+    echo "    automatic [-a]: $automatic"
+fi
+if [ "$SCRIPTPATH" != "$USER_HOME/$BASENAME" ] && [ "$automatic" -eq "0" ];
+then
     # SUPER USER RIGHTS
     [ "$UID" -eq 0 ] || { 
         echo "Please consider running this script with root, miniconda can require it!"; 
@@ -77,8 +83,7 @@ else
     fi
     cp $SCRIPTPATH $USER_HOME/$BASENAME
     #chown -R $USER $USER_HOME/$BASENAME
-    if [ "$quiet" -eq "0" ]; 
-    then
+    if [ "$quiet" -eq "0" ]; then
         /bin/bash $USER_HOME/$BASENAME
     else
         /bin/bash $USER_HOME/$BASENAME -q
@@ -95,6 +100,7 @@ then
     echo
     echo "Deleting permanently Project..."
     echo "    Project path: $MODEL_PATH"
+    chown -R $USER $MODEL_PATH &>/dev/nul
     rm -r $MODEL_PATH
 else
     # DELETE PCKGS
@@ -107,6 +113,7 @@ else
     echo
     echo "Deleting recursively Project..."
     echo "    Project path: $MODEL_PATH"
+    chown -R $USER $MODEL_PATH &>/dev/nul
     rm -rf $MODEL_PATH
 fi
 
@@ -120,5 +127,8 @@ else
     echo 'Uninstalation Completed!'
 fi
 
-rm -rf $USER_HOME/$BASENAME
+if [ "$automatic" -eq "0" ];
+then
+    rm -rf $USER_HOME/$BASENAME && exit
+fi
 exit

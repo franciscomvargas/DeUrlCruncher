@@ -17,6 +17,9 @@ parser.add_argument("-rp", "--respath",
                     help=f'Output json file path, default `{DEFAULT_OUT_PATH}`',
                     default=str(DEFAULT_OUT_PATH),
                     type=str)
+parser.add_argument('-nc', '--noclear',
+                    help='Service Status Request',
+                    action='store_true')
 
 DEBUG = True
     
@@ -88,10 +91,8 @@ class SearchThread(threading.Thread):
 
 def main(args):
     if args.query == "deurlcruncher_cli":
-        if sys.platform == "win32":
-            os.system("cls")
-        else:
-            os.system("clear")
+        if not args.noclear:
+            os.system("cls" if sys.platform == "win32" else "clear" )
         print(pcol("Welcome to DeUrlCruncher CLI ", "header1"), pcol("by © DeSOTA, 2023", "header2"))
         print(pcol("Get list of URLs from search query\n", "body"))
 
