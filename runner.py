@@ -26,7 +26,7 @@ USER_PATH = "\\".join(APP_PATH.split("\\")[:-3])
 CONFIG_PATH = os.path.join(DESOTA_ROOT_PATH, "Configs")
 USER_CONF_PATH = os.path.join(CONFIG_PATH, "user.config.yaml")
 SERV_CONF_PATH = os.path.join(CONFIG_PATH, "services.config.yaml")
-LAST_SERV_CONF_PATH = os.path.join(CONFIG_PATH, "latest_services_config.yaml")
+LAST_SERV_CONF_PATH = os.path.join(CONFIG_PATH, "latest_services.config.yaml")
 
 # DeSOTA Funcs
 def get_model_req(req_path):
