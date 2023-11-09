@@ -55,16 +55,6 @@ def get_user_config() -> dict:
     with open( USER_CONF_PATH ) as f_user:
         return yaml.load(f_user, Loader=SafeLoader)
 
-#   > Return (services.config.yaml, latest_services.config.yaml)
-def get_services_config() -> (dict, dict):
-    if not (os.path.isfile(SERV_CONF_PATH) or os.path.isfile(LAST_SERV_CONF_PATH)):
-        print(f" [SERV_CONF] Not found-> {SERV_CONF_PATH}")
-        print(f" [LAST_SERV_CONF] Not found-> {LAST_SERV_CONF_PATH}")
-        raise EnvironmentError()
-    with open( SERV_CONF_PATH ) as f_curr:
-        with open(LAST_SERV_CONF_PATH) as f_last:
-            return yaml.load(f_curr, Loader=SafeLoader), yaml.load(f_last, Loader=SafeLoader)
-
 
 def main(args):
     '''
@@ -104,26 +94,26 @@ def main(args):
     # Run Model
     if _req_text:
         user_conf = get_user_config()
+        _model_run = os.path.join(APP_PATH, "main.py")                                                  # Python with model runner packages
         if user_conf["system"] == "win":
-            # Model Vars
-            serv_conf, last_serv_conf = get_services_config()
-            _model_runner_param = serv_conf["services_params"]["franciscomvargas/deurlcruncher"]["win"]     # Model params from services.config.yaml
-            _model_runner_py = os.path.join(USER_PATH, _model_runner_param["runner_py"])                    # Python with model runner packages
-            _model_run = os.path.join(APP_PATH, "main.py")                                                  # Python with model runner packages
+            _model_runner_py = os.path.join(APP_PATH, "env", "python.exe")                    # Python with model runner packages
+        elif user_conf["system"] == "lin":
+            _model_runner_py = os.path.join(APP_PATH, "env", "bin", "python3")                    # Python with model runner packages
             
-            _sproc = subprocess.Popen(
-                [
-                    _model_runner_py, _model_run, 
-                    "--query", str(_req_text), 
-                    "--resnum", str(_resnum),
-                    "--respath", out_filepath
-                ]
-            )
-            # TODO: implement model timeout
-            while True:
-                _ret_code = _sproc.poll()
-                if _ret_code != None:
-                    break
+
+        _sproc = subprocess.Popen(
+            [
+                _model_runner_py, _model_run, 
+                "--query", str(_req_text), 
+                "--resnum", str(_resnum),
+                "--respath", out_filepath
+            ]
+        )
+        # TODO: implement model timeout
+        while True:
+            _ret_code = _sproc.poll()
+            if _ret_code != None:
+                break
     else:
         print(f"[ ERROR ] -> DeUrlCruncher Request Failed: No Input found")
         exit(1)
