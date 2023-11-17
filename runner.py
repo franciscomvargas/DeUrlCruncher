@@ -1,12 +1,8 @@
-import os
-import time
-import requests
+import os, sys
+import time, re, json, shutil
+import requests, subprocess
 import yaml
 from yaml.loader import SafeLoader
-import json
-import subprocess
-import time
-from runner_utils.utils import *
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -14,21 +10,71 @@ parser.add_argument("-mr", "--model_req",
                     help="DeSOTA Request as yaml file path",
                     type=str)
 parser.add_argument("-mru", "--model_res_url",
-                    help="DeSOTA API Rsponse URL for model results",
+                    help="DeSOTA API Result URL. Recognize path instead of url for desota tests", # check how is atribuited the dev_mode variable in main function
                     type=str)
 
-# :: os.getcwd() = C:\users\[user]\Desota\DeRunner
-# WORKING_FOLDER = os.getcwd()
+DEBUG = False
+
+# DeSOTA Funcs [START]
+#   > Get User OS
+# inspired inhttps://stackoverflow.com/a/13874620
+def get_platform():
+    _platform = sys.platform
+    _win_res=["win32", "cygwin", "msys"]
+    _lin_res=["linux", "linux2"]
+    _user_sys = "win" if _platform in _win_res else "lin" if _platform in _lin_res else None
+    if not _user_sys:
+        raise EnvironmentError(f"Plataform `{_platform}` can not be parsed to DeSOTA Options: Windows={_win_res}; Linux={_lin_res}")
+    return _user_sys
+#   > Grab DeSOTA Paths
+USER_SYS=get_platform()
 APP_PATH = os.path.dirname(os.path.realpath(__file__))
-DESOTA_ROOT_PATH = "\\".join(APP_PATH.split("\\")[:-2])
-USER_PATH = "\\".join(APP_PATH.split("\\")[:-3])
-
+#   > USER_PATH
+if USER_SYS == "win":
+    path_split = str(APP_PATH).split("\\")
+    desota_idx = [ps.lower() for ps in path_split].index("desota")
+    USER=path_split[desota_idx-1]
+    USER_PATH = "\\".join(path_split[:desota_idx])
+elif USER_SYS == "lin":
+    path_split = str(APP_PATH).split("/")
+    desota_idx = [ps.lower() for ps in path_split].index("desota")
+    USER=path_split[desota_idx-1]
+    USER_PATH = "/".join(path_split[:desota_idx])
+def user_chown(path):
+    '''Remove root previleges for files and folders: Required for Linux'''
+    if USER_SYS == "lin":
+        #CURR_PATH=/home/[USER]/Desota/DeRunner
+        os.system(f"chown -R {USER} {path}")
+    return
+DESOTA_ROOT_PATH = os.path.join(USER_PATH, "Desota")
 CONFIG_PATH = os.path.join(DESOTA_ROOT_PATH, "Configs")
-USER_CONF_PATH = os.path.join(CONFIG_PATH, "user.config.yaml")
 SERV_CONF_PATH = os.path.join(CONFIG_PATH, "services.config.yaml")
-LAST_SERV_CONF_PATH = os.path.join(CONFIG_PATH, "latest_services.config.yaml")
 
-# DeSOTA Funcs
+#   > Import DeSOTA Scripts
+RUNNER_UTILS_DIR = os.path.join(APP_PATH, "runner_utils")
+RUNNER_UTILS_PY = os.path.join(RUNNER_UTILS_DIR, "utils.py")
+DERUNNER_UTILS_PATH = os.path.join(DESOTA_ROOT_PATH, "DeRunner", "Tools", "decode_desota_model_request.py")
+RUNNER_UTILS_URL = "https://raw.githubusercontent.com/DeSOTAai/DeRunner/main/Tools/decode_desota_model_request.py"
+_utils_init = os.path.join(RUNNER_UTILS_DIR, "__init__.py")
+_desota_files = [RUNNER_UTILS_PY, _utils_init]
+_desota_isfiles = [os.path.isfile(p) for p in _desota_files]
+if False in _desota_isfiles:
+    if not os.path.isdir(RUNNER_UTILS_DIR):
+        os.mkdir(RUNNER_UTILS_DIR)
+    if not os.path.isfile(_utils_init):
+        open(_utils_init, 'w').close()
+    if not os.path.isfile(RUNNER_UTILS_PY) and os.path.isfile(DERUNNER_UTILS_PATH):
+        shutil.copyfile(DERUNNER_UTILS_PATH, RUNNER_UTILS_PY)
+    if not os.path.isfile(RUNNER_UTILS_PY):
+        runner_utils_req = requests.get(RUNNER_UTILS_URL)
+        if runner_utils_req.status_code != 200:
+            raise EnvironmentError(f"Unable to create Desota Runner Utils\n  from: {RUNNER_UTILS_URL}\n    to: {RUNNER_UTILS_PY}")
+        with open(RUNNER_UTILS_PY, "w") as ru:
+            ru.write(runner_utils_req.text)
+    user_chown(RUNNER_UTILS_DIR)
+from runner_utils.utils import *
+
+#   > Parse DeSOTA Request
 def get_model_req(req_path):
     '''
     {
@@ -46,14 +92,16 @@ def get_model_req(req_path):
         exit(1)
     with open(req_path) as f:
         return yaml.load(f, Loader=SafeLoader)
+#   > FIND URL WITH REGEX
+def get_url_from_str(string):
+    # retrieved from https://www.geeksforgeeks.org/python-check-url-string/
+    # findall() has been used
+    # with valid conditions for urls in string
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    url = re.findall(regex, string)
+    return [x[0] for x in url]
+# DeSOTA Funcs [END]
 
-#   > Grab User Configurations
-def get_user_config() -> dict:
-    if not os.path.isfile(USER_CONF_PATH):
-        print(f" [USER_CONF] Not found-> {USER_CONF_PATH}")
-        raise EnvironmentError()
-    with open( USER_CONF_PATH ) as f_user:
-        return yaml.load(f_user, Loader=SafeLoader)
 
 
 def main(args):
@@ -65,13 +113,13 @@ def main(args):
     3 = API RESPONSE ERROR
     9 = REINSTALL MODEL (critical fail)
     '''
+   # Time when grabed
+    _report_start_time = time.time()
+    start_time = int(_report_start_time)
 
     #---INPUT---# TODO (PRO ARGS)
     _resnum = 5
     #---INPUT---#
-
-    # Time when grabed
-    start_time = int(time.time())
 
     # DeSOTA Model Request
     model_request_dict = get_model_req(args.model_req)
@@ -79,27 +127,31 @@ def main(args):
     # API Response URL
     send_task_url = args.model_res_url
     
-    # TMP File Path
+    # TARGET File Path
     out_filepath = os.path.join(APP_PATH, f"text-to-url{start_time}.json")
-    
-    # Get url from request
+    if len(get_url_from_str(send_task_url))>1:
+        dev_mode = False
+    else:
+        dev_mode = True
+        report_path = send_task_url
+
+    # Get text from request
     _req_text = get_request_text(model_request_dict)
-    with open(os.path.join(APP_PATH, "debug.txt"), "w") as fw:
-        fw.writelines([
-            f"INPUT: '{_req_text}'\n",
-            f"IsINPUT?: {True if _req_text else False}\n"
-        ])
+    if DEBUG:
+        with open(os.path.join(APP_PATH, "debug.txt"), "w") as fw:
+            fw.writelines([
+                f"INPUT: '{_req_text}'\n",
+                f"IsINPUT?: {True if _req_text else False}\n"
+            ])
 
 
     # Run Model
     if _req_text:
-        user_conf = get_user_config()
-        _model_run = os.path.join(APP_PATH, "main.py")                                                  # Python with model runner packages
-        if user_conf["system"] == "win":
-            _model_runner_py = os.path.join(APP_PATH, "env", "python.exe")                    # Python with model runner packages
-        elif user_conf["system"] == "lin":
-            _model_runner_py = os.path.join(APP_PATH, "env", "bin", "python3")                    # Python with model runner packages
-            
+        _model_run = os.path.join(APP_PATH, "main.py")
+        if USER_SYS == "win":
+            _model_runner_py = os.path.join(APP_PATH, "env", "python.exe")
+        elif USER_SYS == "lin":
+            _model_runner_py = os.path.join(APP_PATH, "env", "bin", "python3")
 
         _sproc = subprocess.Popen(
             [
@@ -109,8 +161,8 @@ def main(args):
                 "--respath", out_filepath
             ]
         )
-        # TODO: implement model timeout
         while True:
+            # TODO: implement model timeout
             _ret_code = _sproc.poll()
             if _ret_code != None:
                 break
@@ -122,27 +174,44 @@ def main(args):
         print(f"[ ERROR ] -> DeUrlCruncher Request Failed: No Output found")
         exit(2)
     
-    with open(out_filepath, "r") as fr:
-        deurlcruncher_res = json.loads(fr.read())
-    
-    with open(os.path.join(APP_PATH, "debug.txt"), "a") as fw:
-        fw.write(f"RESULT: {json.dumps(deurlcruncher_res)}")
+    if dev_mode:
+        if not report_path.endswith(".json"):
+            report_path += ".json"
+        with open(report_path, "w") as rw:
+            json.dump(
+                {
+                    "Model Result Path": out_filepath,
+                    "Processing Time": time.time() - _report_start_time
+                },
+                rw,
+                indent=2
+            )
+        user_chown(report_path)
+        user_chown(out_filepath)
+        print(f"Path to report:\n\t{report_path}")
+    else:
+        with open(out_filepath, "r") as fr:
+            deurlcruncher_res = json.loads(fr.read())
+        
+        if DEBUG:
+            with open(os.path.join(APP_PATH, "debug.txt"), "a") as fw:
+                fw.write(f"RESULT: {json.dumps(deurlcruncher_res)}")
 
-    print(f"[ INFO ] -> DeUrlCruncher Response:{json.dumps(deurlcruncher_res, indent=2)}")
-    
-    # DeSOTA API Response Preparation
-    files = []
-    with open(out_filepath, 'rb') as fr:
-        files.append(('upload[]', fr))
-        # DeSOTA API Response Post
-        send_task = requests.post(url = send_task_url, files=files)
-        print(f"[ INFO ] -> DeSOTA API Upload:{json.dumps(send_task.json(), indent=2)}")
-    # Delete temporary file
-    os.remove(out_filepath)
+        print(f"[ INFO ] -> DeUrlCruncher Response:{json.dumps(deurlcruncher_res, indent=2)}")
 
-    if send_task.status_code != 200:
-        print(f"[ ERROR ] -> DeUrlCruncher Post Failed (Info):\nfiles: {files}\nResponse Code: {send_task.status_code}")
-        exit(3)
+        # DeSOTA API Response Preparation
+        files = []
+        with open(out_filepath, 'rb') as fr:
+            files.append(('upload[]', fr))
+            # DeSOTA API Response Post
+            send_task = requests.post(url = send_task_url, files=files)
+            print(f"[ INFO ] -> DeSOTA API Upload:{json.dumps(send_task.json(), indent=2)}")
+        # Delete temporary file
+        os.remove(out_filepath)
+
+        if send_task.status_code != 200:
+            print(f"[ ERROR ] -> DeUrlCruncher Post Failed (Info):\nfiles: {files}\nResponse Code: {send_task.status_code}")
+            exit(3)
     
     print("TASK OK!")
     exit(0)
