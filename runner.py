@@ -129,11 +129,12 @@ def main(args):
     
     # TARGET File Path
     out_filepath = os.path.join(APP_PATH, f"text-to-url{start_time}.json")
-    if len(get_url_from_str(send_task_url))>1:
-        dev_mode = False
-    else:
+    out_urls = get_url_from_str(send_task_url)
+    if len(out_urls)==0:
         dev_mode = True
-        report_path = send_task_url
+    else:
+        dev_mode = False
+        report_path = out_urls[0]
 
     # Get text from request
     _req_text = get_request_text(model_request_dict)
