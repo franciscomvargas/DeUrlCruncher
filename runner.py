@@ -125,20 +125,22 @@ def main(args):
     model_request_dict = get_model_req(args.model_req)
     
     # API Response URL
-    result_id = args.model_res_url
+    send_task_url = args.model_res_url
     
     # TARGET File Path
     out_filepath = os.path.join(APP_PATH, f"text-to-url{start_time}.json")
-    out_urls = get_url_from_str(result_id)
+    out_urls = get_url_from_str(send_task_url)
     if len(out_urls)==0:
         dev_mode = True
-        report_path = result_id
+        report_path = send_task_url
     else:
         dev_mode = False
-        send_task_url = out_urls[0]
+        report_path = out_urls[0]
 
     # Get text from request
     _req_text = get_request_text(model_request_dict)
+    if isinstance(_req_text, list):
+        _req_text = ", ".join(_req_text)
     if DEBUG:
         with open(os.path.join(APP_PATH, "debug.txt"), "w") as fw:
             fw.writelines([
@@ -194,7 +196,6 @@ def main(args):
     else:
         with open(out_filepath, "r") as fr:
             deurlcruncher_res = json.loads(fr.read())
-        
         if DEBUG:
             with open(os.path.join(APP_PATH, "debug.txt"), "a") as fw:
                 fw.write(f"RESULT: {json.dumps(deurlcruncher_res)}")
