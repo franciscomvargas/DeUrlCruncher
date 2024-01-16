@@ -72,13 +72,12 @@ def main(args):
     # Get text from request
     _req_text = detools.get_request_text(model_request_dict)
     if isinstance(_req_text, list):
-        _req_text = " OR ".join(_req_text)
+        _req_text = " + ".join(_req_text)
     if DEBUG:
-        with open(os.path.join(APP_PATH, "debug.txt"), "w") as fw:
-            fw.writelines([
-                f"INPUT: '{_req_text}'\n",
-                f"IsINPUT?: {True if _req_text else False}\n"
-            ])
+        print(json.dumps([
+            f"INPUT: '{_req_text}'\n",
+            f"IsINPUT?: {True if _req_text else False}\n"
+        ], indent=2))
 
 
     # Run Model
@@ -128,9 +127,6 @@ def main(args):
     else:
         with open(out_filepath, "r") as fr:
             deurlcruncher_res = json.loads(fr.read())
-        if DEBUG:
-            with open(os.path.join(APP_PATH, "debug.txt"), "a") as fw:
-                fw.write(f"RESULT: {json.dumps(deurlcruncher_res)}")
 
         print(f"[ INFO ] -> DeUrlCruncher Response:{json.dumps(deurlcruncher_res, indent=2)}")
 
