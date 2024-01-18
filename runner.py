@@ -49,13 +49,21 @@ def main(args):
     _report_start_time = time.time()
     start_time = int(_report_start_time)
 
-    #---INPUT---# TODO (PRO ARGS)
-    _resnum = 5
-    #---INPUT---#
-
     # DeSOTA Model Request
     model_request_dict = detools.get_model_req(args.model_req)
     
+    #---INPUT---# (PRO ARGS)
+    model_request_args = detools.get_model_args(model_request_dict)
+    try:
+        assert model_request_args["num_results"]
+        _resnum = int(model_request_args["num_results"])
+        if _resnum <= 0 or _resnum > 15:
+            raise ValueError
+    except Exception:
+        _resnum = 5
+        pass
+    #---INPUT---#
+
     # API Response URL
     send_task_url = args.model_res_url
     
