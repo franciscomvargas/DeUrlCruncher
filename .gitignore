@@ -5,6 +5,7 @@ config.yaml
 
 # Files Generated
 gen_files
+text-to-url*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
