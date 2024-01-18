@@ -117,9 +117,9 @@ def main(args):
             # Get Number of Results
             _resnum = input(pcol("Qtty of results (default=5, min=1, max=20): ", "section"))
             if not _resnum.isnumeric() or int(_resnum)<=0 or int(_resnum)>20:
-                _resnum=5
+                _resnum=4
             else:
-                _resnum = int(_resnum)
+                _resnum = int(_resnum)-1
             
             
             # Get Results
