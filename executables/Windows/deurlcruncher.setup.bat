@@ -148,13 +148,11 @@ IF NOT EXIST %model_path% (
 )
 
 :: Move to Project Folder
-ECHO.
-ECHO %info_h1%Step 1/3 - Move (cd) to Project Path%ansi_end%
 call cd %model_path% >NUL 2>NUL
 
 :: Install Conda Required
 ECHO.
-ECHO %info_h1%Step 2/3 - Install Miniconda for Project%ansi_end%
+ECHO %info_h1%Step 1/2 - Install Miniconda for Project%ansi_end%
 call mkdir %user_path%\Desota\Portables >NUL 2>NUL
 IF NOT EXIST %conda_path% goto installminiconda
 goto skipinstallminiconda
@@ -185,7 +183,7 @@ call %conda_path% install pip -y
 
 :: Install required Libraries
 ECHO.
-ECHO %info_h1%Step 3/3 - Install Project Packages%ansi_end%
+ECHO %info_h1%Step 2/2 - Install Project Packages%ansi_end%
 IF %arg2_bool% EQU 1 (
     call pip install -r %pip_reqs% --compile --no-cache-dir
 ) ELSE (
