@@ -93,9 +93,6 @@ echo "    debug [-d]: $debug"
 if ( test -d "$MODEL_PATH" ); 
 then
     cd $MODEL_PATH
-    echo
-    echo "Step 1/3 - Move (cd) to Project Path:"
-    echo "    $PWD"
 else
     echo "Error:"
     echo "# Description: Model not installed correctly"
@@ -108,7 +105,7 @@ fi
 
 # Install Conda IF Required
 echo
-echo "Step 2/3 - Install Miniconda for Project"
+echo "Step 1/2 - Install Miniconda for Project"
 # Install Conda if Required - https://developers.google.com/earth-engine/guides/python_install-conda#linux
 # Miniconda Instalation Status
 CONDA_BASE=$USER_HOME/Desota/Portables/miniconda3
@@ -160,7 +157,7 @@ echo "    $CONDA_PREFIX"
 
 # Install required Libraries
 echo
-echo "Step 3/3 - Install Project Packages"
+echo "Step 2/2 - Install Project Packages"
 export TMPDIR='/var/tmp'
 if [ "$debug" -eq "1" ]; 
 then
